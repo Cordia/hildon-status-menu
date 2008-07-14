@@ -1,0 +1,5 @@
+[X-PluginManager]
+X-Plugin-Dir=@hildonstatusmenudesktopentrydir@
+X-Load-New-Plugins=true
+X-Load-All-Plugins=true
+X-Debug-Plugins=example-clock.desktop
