@@ -1,0 +1,10 @@
+General Information
+===================
+
+The Status Menu application. For the Status Menu API see libhildondesktop.
+
+Requirements
+============
+
+* libhildondesktop
+* hildon-widgets
