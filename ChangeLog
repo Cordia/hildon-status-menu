@@ -1,5 +1,10 @@
 2008-07-16  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-menu.c (hd_status_menu_map, hd_status_menu_unmap): Fix
+	some warnings.
+
+2008-07-16  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-menu.c (hd_status_menu_dispose,
 	hd_status_menu_plugin_added_cb, hd_status_menu_plugin_removed_cb,
 	hd_status_menu_set_property, hd_status_menu_class_init,

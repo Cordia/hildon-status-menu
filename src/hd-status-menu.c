@@ -261,17 +261,9 @@ grab_transfer_window_get (GtkWidget *widget)
 }
 
 static void
-hd_status_menu_emit_void_signal (GtkWidget *widget,
-                                 gpointer   data)
-{
-  g_signal_emit (widget, GPOINTER_TO_UINT (data), 0);
-}
-
-static void
 hd_status_menu_map (GtkWidget *widget)
 {
   HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
-  guint status_menu_map_id;
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->map (widget);
 
@@ -307,7 +299,6 @@ static void
 hd_status_menu_unmap (GtkWidget *widget)
 {
   HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
-  guint status_menu_unmap_id;
 
   /* Remove the grab */
   if (priv->transfer_window != NULL)
