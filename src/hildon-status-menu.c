@@ -40,24 +40,6 @@
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
 
 static void
-plugin_loaded_cb (HDPluginManager *manager,
-		  GObject         *plugin,
-		  HDStatusMenu    *status_menu)
-{
-  if (HD_IS_STATUS_MENU_ITEM (plugin))
-    hd_status_menu_add_plugin (status_menu, GTK_WIDGET (plugin));
-}
-
-static void
-plugin_removed_cb (HDPluginManager *manager,
-		   GObject         *plugin,
-		   HDStatusMenu    *status_menu)
-{
-  if (HD_IS_STATUS_MENU_ITEM (plugin))
-    hd_status_menu_remove_plugin (status_menu, GTK_WIDGET (plugin));
-}
-
-static void
 show_button_clicked_cb (GtkButton    *button,
                         HDStatusMenu *status_menu)
 {
@@ -98,7 +80,7 @@ main (int argc, char **argv)
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
 
-  /* FIXME: No translations
+  /* FIXME: No translations required (yet)
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
@@ -110,21 +92,26 @@ main (int argc, char **argv)
 
   signal (SIGTERM, signal_handler);
 
+  /* Create a config file for the plugin manager
+   *
+   * FIXME: HDPluginManager could be a subclass of HDConfigFile.
+   */
   config_file = hd_config_file_new (HD_DESKTOP_CONFIG_PATH,
                                     NULL,
                                     "status-menu.conf");
   plugin_manager = hd_plugin_manager_new (config_file, HD_STATUS_MENU_STAMP_FILE);
   g_object_unref (config_file);
 
-  status_menu = hd_status_menu_new ();
+  /* Create the status menu */
+  status_menu = hd_status_menu_new (plugin_manager);
 
-  g_signal_connect (G_OBJECT (plugin_manager), "plugin-added",
-		    G_CALLBACK (plugin_loaded_cb), status_menu);
-  g_signal_connect (G_OBJECT (plugin_manager), "plugin-removed",
-		    G_CALLBACK (plugin_removed_cb), status_menu);
-
+  /* Load the configuration of the plugin manager and load plugins */
   hd_plugin_manager_run (plugin_manager);
 
+  /* Create simple window to show the Status Menu 
+   *
+   * FIXME: Should be the Status Area
+   */
   button = gtk_button_new_with_label ("Show Status Menu");
   gtk_widget_show (button);
   g_signal_connect (G_OBJECT (button), "clicked",

@@ -38,21 +38,41 @@
 #include "hd-status-menu.h"
 #include "hd-status-menu-box.h"
 
+/**
+ * SECTION:hdstatusmenu
+ * @short_description: A Status Menu
+ * @include: hd-status-menu.h 
+ * 
+ * #HDStatusMenu is a Status Menu. Items in the Status Menu, which should show
+ * status information, are subclasses of #HDStatusMenuItem and are implemented 
+ * as plugins.
+ *
+ * See #HDStatusMenuItem for more information.
+ *
+ **/
 
-/* FIXME */
+
+/* FIXME Use the pixel sizes from the layout guide  */
 #define STATUS_MENU_INNER_BORDER 4
 #define STATUS_MENU_EXTERNAL_BORDER 40
 
 #define STATUS_MENU_ITEM_HEIGHT 70 /* Master Layout Guide */
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
 
-typedef struct _HDStatusMenuPrivate HDStatusMenuPrivate;
+enum
+{
+  PROP_0,
+  PROP_PLUGIN_MANAGER
+};
 
-struct _HDStatusMenuPrivate {
-    GtkWidget *box;
-    GtkWidget *pannable;
+struct _HDStatusMenuPrivate
+{
+  GtkWidget       *box;
+  GtkWidget       *pannable;
 
-    GdkWindow *transfer_window;
+  GdkWindow       *transfer_window;
+
+  HDPluginManager *plugin_manager;
 };
 
 #define HD_STATUS_MENU_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_MENU, HDStatusMenuPrivate));
@@ -62,21 +82,22 @@ G_DEFINE_TYPE (HDStatusMenu, hd_status_menu, GTK_TYPE_WINDOW);
 static void
 hd_status_menu_init (HDStatusMenu *status_menu)
 {
-  HDStatusMenuPrivate *priv;
-  GtkWidget *hbox, *vbox; /* used to center the pannable */
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
+  GtkWidget *hbox, *vbox; /* Used to center the pannable */
 
-  priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
+  /* Set priv member */
+  status_menu->priv = priv;
 
   priv->box = hd_status_menu_box_new ();
   gtk_widget_show (priv->box);
 
   priv->pannable = hildon_pannable_area_new ();
   g_object_set (G_OBJECT (priv->pannable), "hindicator-mode", HILDON_PANNABLE_AREA_INDICATOR_MODE_HIDE, NULL);
-  /* FIXME: ? */
+  /* FIXME: Should there be a vertival indicator or not? */
   g_object_set (G_OBJECT (priv->pannable), "vindicator-mode", HILDON_PANNABLE_AREA_INDICATOR_MODE_HIDE, NULL);
-  /* FIXME: requires HildonPannableArea from sandbox */
+  /* FIXME: Requires HildonPannableArea from sandbox */
   /* g_object_set (G_OBJECT (priv->pannable), "mov-mode", HILDON_PANNABLE_AREA_INDICATOR_MOV_MODE_VERTICAL, NULL); */
-  /* FIXME: use dynamic size */
+  /* FIXME: Should use dynamic size */
   gtk_widget_set_size_request (priv->pannable, 656, 280);
   gtk_widget_show (priv->pannable);
 
@@ -98,35 +119,78 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
 }
 
-void
-hd_status_menu_add_plugin (HDStatusMenu *status_menu,
-                           GtkWidget    *plugin)
+static void
+hd_status_menu_dispose (GObject *object)
 {
-  HDStatusMenuPrivate *priv;
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (object)->priv;
 
-  priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
-
-  gtk_container_add (GTK_CONTAINER (priv->box), plugin);
-
-  if (GTK_WIDGET_MAPPED (status_menu))
-    g_signal_emit_by_name (G_OBJECT (plugin), "status-menu-map", 0);
-}
-
-void
-hd_status_menu_remove_plugin (HDStatusMenu *status_menu,
-                              GtkWidget    *plugin)
-{
-  HDStatusMenuPrivate *priv;
-
-  priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
-
-  gtk_container_remove (GTK_CONTAINER (priv->box), plugin);
+  if (priv->plugin_manager)
+    {
+      g_object_unref (priv->plugin_manager);
+      priv->plugin_manager = NULL;
+    }
 }
 
 static void
-hd_status_menu_finalize (GObject *object)
+hd_status_menu_plugin_added_cb (HDPluginManager *plugin_manager,
+                                GObject         *plugin,
+                                HDStatusMenu    *status_menu)
 {
-  G_OBJECT_CLASS (hd_status_menu_parent_class)->finalize (object);
+  HDStatusMenuPrivate *priv = status_menu->priv;
+
+  /* Plugin must be a HDStatusMenuItem */
+  if (!HD_IS_STATUS_MENU_ITEM (plugin))
+    return;
+
+  /* Pack the plugin into the box. The plugin is responsible to show 
+   * the widget (required to support temporary visible items).
+   */
+  gtk_container_add (GTK_CONTAINER (priv->box), GTK_WIDGET (plugin));
+}
+
+static void
+hd_status_menu_plugin_removed_cb (HDPluginManager *plugin_manager,
+                                  GObject         *plugin,
+                                  HDStatusMenu    *status_menu)
+{
+  HDStatusMenuPrivate *priv = status_menu->priv;
+
+  /* Plugin must be a HDStatusMenuItem */
+  if (!HD_IS_STATUS_MENU_ITEM (plugin))
+    return;
+
+  /* Remove the plugin from the container (and destroy it) */
+  gtk_container_remove (GTK_CONTAINER (priv->box), GTK_WIDGET (plugin));
+}
+
+
+static void
+hd_status_menu_set_property (GObject      *object,
+                             guint         prop_id,
+                             const GValue *value,
+                             GParamSpec   *pspec)
+{
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (object)->priv;
+
+  switch (prop_id)
+    {
+    case PROP_PLUGIN_MANAGER:
+      /* The property is CONSTRUCT_ONLY so there is no value yet */
+      priv->plugin_manager = g_value_dup_object (value);
+      if (priv->plugin_manager != NULL)
+        {
+          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-added",
+                                   G_CALLBACK (hd_status_menu_plugin_added_cb), object, 0);
+          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-removed",
+                                   G_CALLBACK (hd_status_menu_plugin_removed_cb), object, 0);
+        }
+      else
+        g_warning ("plugin-manager should not be NULL");
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 static void
@@ -138,9 +202,10 @@ hd_status_menu_realize (GtkWidget *widget)
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->realize (widget);
 
+  /* Use only a border as decoration */
   gdk_window_set_decorations (widget->window, GDK_DECOR_BORDER);
 
-  /* Copied from HildonAppMenu */
+  /* Set the _NET_WM_WINDOW_TYPE property (copied from HildonAppMenu) */
   display = gdk_drawable_get_display (widget->window);
   atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE");
   XChangeProperty (GDK_WINDOW_XDISPLAY (widget->window), GDK_WINDOW_XID (widget->window),
@@ -205,10 +270,8 @@ hd_status_menu_emit_void_signal (GtkWidget *widget,
 static void
 hd_status_menu_map (GtkWidget *widget)
 {
-  HDStatusMenuPrivate *priv;
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
   guint status_menu_map_id;
-
-  priv = HD_STATUS_MENU_GET_PRIVATE (widget);
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->map (widget);
 
@@ -238,18 +301,13 @@ hd_status_menu_map (GtkWidget *widget)
           priv->transfer_window = NULL;
       }
   }
-
-  status_menu_map_id = g_signal_lookup ("status-menu-map", HD_TYPE_STATUS_MENU_ITEM);
-  gtk_container_foreach (GTK_CONTAINER (priv->box), hd_status_menu_emit_void_signal, GUINT_TO_POINTER (status_menu_map_id));
 }
 
 static void
 hd_status_menu_unmap (GtkWidget *widget)
 {
-  HDStatusMenuPrivate *priv;
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
   guint status_menu_unmap_id;
-
-  priv = HD_STATUS_MENU_GET_PRIVATE (widget);
 
   /* Remove the grab */
   if (priv->transfer_window != NULL)
@@ -261,9 +319,6 @@ hd_status_menu_unmap (GtkWidget *widget)
       gdk_window_destroy (priv->transfer_window);
       priv->transfer_window = NULL;
     }
-
-  status_menu_unmap_id = g_signal_lookup ("status-menu-unmap", HD_TYPE_STATUS_MENU_ITEM);
-  gtk_container_foreach (GTK_CONTAINER (priv->box), hd_status_menu_emit_void_signal, GUINT_TO_POINTER (status_menu_unmap_id));
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->unmap (widget);
 }
@@ -302,7 +357,8 @@ hd_status_menu_class_init (HDStatusMenuClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = hd_status_menu_finalize;
+  object_class->dispose = hd_status_menu_dispose;
+  object_class->set_property = hd_status_menu_set_property;
 
   widget_class->realize = hd_status_menu_realize;
   widget_class->map = hd_status_menu_map;
@@ -310,16 +366,33 @@ hd_status_menu_class_init (HDStatusMenuClass *klass)
   widget_class->button_release_event = hd_status_menu_button_release_event;
   /*  widget_class->size_request = hd_status_menu_size_request; */
 
+  g_object_class_install_property (object_class,
+                                   PROP_PLUGIN_MANAGER,
+                                   g_param_spec_object ("plugin-manager",
+                                                        "Plugin Manager",
+                                                        "The plugin manager which should be used",
+                                                        HD_TYPE_PLUGIN_MANAGER,
+                                                        G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY));
+
   g_type_class_add_private (klass, sizeof (HDStatusMenuPrivate));
 }
 
+/**
+ * hd_status_menu_new:
+ * @plugin_manager a #HDPluginManager used to load the plugins
+ *
+ * Create a new Status Menu window.
+ *
+ * Returns: a new #HDStatusMenu.
+ **/
 GtkWidget *
-hd_status_menu_new (void)
+hd_status_menu_new (HDPluginManager *plugin_manager)
 {
   GtkWidget *status_menu;
 
   status_menu = g_object_new (HD_TYPE_STATUS_MENU,
                               "type", GTK_WINDOW_TOPLEVEL,
+                              "plugin-manager", plugin_manager,
                               NULL);
 
   return status_menu;

@@ -45,7 +45,7 @@ button_release_event_cb (GtkWidget *widget, GdkEventButton *event, gpointer data
 
   g_warning ("FOO");
 
-  menu = hd_status_menu_new ();
+  menu = hd_status_menu_new (NULL);
   gtk_widget_show (menu);
 
   return TRUE;

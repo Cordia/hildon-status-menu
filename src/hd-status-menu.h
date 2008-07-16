@@ -25,6 +25,7 @@
 #include <glib-object.h>
 
 #include <gtk/gtk.h>
+#include <libhildondesktop/libhildondesktop.h>
 
 G_BEGIN_DECLS
 
@@ -35,28 +36,29 @@ G_BEGIN_DECLS
 #define HD_IS_STATUS_MENU_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), HD_TYPE_STATUS_MENU))
 #define HD_STATUS_MENU_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), HD_TYPE_STATUS_MENU, HDStatusMenuClass))
 
-typedef struct _HDStatusMenuClass HDStatusMenuClass;
-typedef struct _HDStatusMenu HDStatusMenu;
+/** HDStatusMenu:
+ *
+ * A #GtkWindow subclass which implements a Status Menu.
+ **/
+typedef struct _HDStatusMenu        HDStatusMenu;
+typedef struct _HDStatusMenuClass   HDStatusMenuClass;
+typedef struct _HDStatusMenuPrivate HDStatusMenuPrivate;
+
+struct _HDStatusMenu
+{
+  GtkWindow parent_instance;
+
+  HDStatusMenuPrivate *priv;
+};
 
 struct _HDStatusMenuClass
 {
   GtkWindowClass parent_class;
 };
 
-struct _HDStatusMenu
-{
-  GtkWindow parent_instance;
-};
+GType      hd_status_menu_get_type (void) G_GNUC_CONST;
 
-GType      hd_status_menu_get_type      (void) G_GNUC_CONST;
-
-GtkWidget *hd_status_menu_new           (void);
-
-void       hd_status_menu_add_plugin    (HDStatusMenu *status_menu,
-                                         GtkWidget    *plugin);
-
-void       hd_status_menu_remove_plugin (HDStatusMenu *status_menu,
-                                         GtkWidget    *plugin);
+GtkWidget *hd_status_menu_new      (HDPluginManager *plugin_manager);
 
 G_END_DECLS
 

@@ -1,3 +1,19 @@
+2008-07-16  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-menu.c (hd_status_menu_dispose,
+	hd_status_menu_plugin_added_cb, hd_status_menu_plugin_removed_cb,
+	hd_status_menu_set_property, hd_status_menu_class_init,
+	hd_status_menu_new): Move HDPluginManager instance as "plugin-manager"
+	property into HDStatusMenu.
+	(hd_status_menu_map, hd_status_menu_unmap): Remove emission of
+	status-menu-map and status-menu-unmap signals.
+	* src/hd-status-menu.h: Move plugin-manager instance into
+	HDStatusMenu. Remove unused functions.
+	* src/hildon-status-menu.c (main): Move plugin-manager instance into
+	HDStatusMenu.
+	* src/hd-status-area.c (button_release_event_cb): Update
+	hd_status_menu_new call.
+
 2008-07-15  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* README: Add some information.
