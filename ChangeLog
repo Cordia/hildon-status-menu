@@ -1,5 +1,14 @@
 2008-07-22  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* Makefile.am:
+	* configure.ac:
+	* debian/hildon-status-menu.install:
+	* hildon-status-menu.desktop.in: Add .desktop file.
+
+	* src/hildon-status-menu.c: Use HildonWindow instead of GtkWindow.
+
+2008-07-22  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* configure.ac: Update version
 
 	* debian/changelog:

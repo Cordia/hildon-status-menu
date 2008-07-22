@@ -1,2 +1,3 @@
 etc/hildon-desktop/status-menu.conf
 usr/bin/hildon-status-menu
+usr/share/applications/hildon/*.desktop

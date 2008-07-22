@@ -28,6 +28,7 @@
 #include <glib/gstdio.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libhildondesktop/libhildondesktop.h>
+#include <hildon/hildon.h>
 
 #include <libintl.h>
 #include <locale.h>
@@ -76,6 +77,7 @@ main (int argc, char **argv)
   HDConfigFile *config_file;
   HDPluginManager *plugin_manager;
   GtkWidget *window, *button;
+  HildonProgram *program;
 
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
@@ -117,12 +119,16 @@ main (int argc, char **argv)
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (show_button_clicked_cb), status_menu);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  window = hildon_window_new ();
   gtk_container_add (GTK_CONTAINER (window), button);
   gtk_widget_show (window);
   g_signal_connect (G_OBJECT (window), "destroy",
 		    G_CALLBACK (gtk_main_quit), NULL);
   
+  program = hildon_program_get_instance ();
+  g_set_application_name ("Status Menu");
+  hildon_program_add_window (program, HILDON_WINDOW (window));
+
   gtk_main ();
 
   return 0;

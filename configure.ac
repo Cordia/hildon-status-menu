@@ -130,6 +130,7 @@ AC_SUBST(hildondesktopmenudir)
 
 AC_OUTPUT([
 Makefile
+hildon-status-menu.desktop
 src/status-menu.conf
 src/Makefile
 ])
