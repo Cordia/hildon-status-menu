@@ -231,7 +231,7 @@ hd_status_menu_box_size_request (GtkWidget      *widget,
   /* width is always two columns */
   requisition->width = 2 * ITEM_WIDTH + 2 * border_width;
   /* height is at least one row */
-  requisition->height = MIN ((visible_children + 1) / 2, 1) * ITEM_HEIGHT + 2 * border_width;
+  requisition->height = MAX ((visible_children + 1) / 2, 1) * ITEM_HEIGHT + 2 * border_width;
 }
 
 static void

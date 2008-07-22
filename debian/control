@@ -1,0 +1,19 @@
+Source: hildon-status-menu
+Section: x11
+Priority: optional
+Maintainer: ? <?@?>
+Build-Depends: debhelper (>= 4.0.0), pkg-config, libhildon1-dev (>= 2.1.0), libosso-gnomevfs2-dev, libdbus-1-dev (>= 1.0.2), libhildondesktop1-dev (>= 2.1.0)
+Standards-Version: 3.6.0
+
+Package: hildon-status-menu
+Section: x11
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${launcher:Depends}
+Description: Hildon Status Menu application
+
+Package: hildon-status-menu-dbg
+Section: devel
+Architecture: any
+Depends: hildon-status-menu (= ${Source-Version})
+Description: Debug symbols for Hildon Status Menu application
+

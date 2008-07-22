@@ -1,3 +1,15 @@
+2008-07-22  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Update version
+
+	* debian/changelog:
+	* debian/control:
+	* debian/hildon-status-menu.install:
+	* debian/rules: Add debian package files.
+
+	* src/hd-status-menu-box.c (hd_status_menu_box_size_request): Fix size
+	request bug.
+
 2008-07-16  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* src/hd-status-menu.c (hd_status_menu_map, hd_status_menu_unmap): Fix
