@@ -1,5 +1,10 @@
 2008-07-23  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* configure.ac:
+	* debian/changelog: Use 0.1.0 as version number.
+
+2008-07-23  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* configure.ac: Get hildonstatusmenudesktopentrydir from
 	libhildondesktop-1.pc file (no more expanding required).
 
