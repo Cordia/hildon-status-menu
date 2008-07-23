@@ -89,44 +89,11 @@ AC_SUBST(GNOME_VFS_LIBS)
 # Directories setup
 #+++++++++++++++++++
 
-localedir="${datadir}/locale"
-hildondesktoplibdir="${libdir}/hildon-desktop"
-
-hildonhomedesktopentrydir="${datadir}/applications/hildon-home"
-hildonstatusmenudesktopentrydir="${datadir}/applications/hildon-status-menu"
-
-AC_SUBST(localedir)
-
 hildondesktopconfdir=${sysconfdir}/hildon-desktop
-#AC_SUBST(hildondesktopentrydir)
-AC_SUBST(hildondesktoplibdir)
 AC_SUBST(hildondesktopconfdir)
 
-# Expand nested variables
-eval "hildonhomedesktopentrydir=$hildonhomedesktopentrydir"
-AC_SUBST(hildonhomedesktopentrydir)
-
-# Expand nested variables
-eval "hildonstatusmenudesktopentrydir=$hildonstatusmenudesktopentrydir"
+hildonstatusmenudesktopentrydir=`pkg-config libhildondesktop-1 --variable=hildonstatusmenudesktopentrydir`
 AC_SUBST(hildonstatusmenudesktopentrydir)
-
-hildondesktopbackgroundsdir=${datadir}/backgrounds
-AC_SUBST(hildondesktopbackgroundsdir)
-
-hildoncpdesktopentrydir=${datadir}/applications/hildon-control-panel
-AC_SUBST(hildoncpdesktopentrydir)
-
-hildonpluginloaderlibdir=${hildondesktoplibdir}/loaders
-AC_SUBST(hildonpluginloaderlibdir)
-
-hildonuipolicylibdir=${hildondesktoplibdir}/policies
-AC_SUBST(hildonuipolicylibdir)
-
-hildondesktopstartupdir=${sysconfdir}/osso-af-init
-AC_SUBST(hildondesktopstartupdir)
-
-hildondesktopmenudir=${sysconfdir}/xdg/menus
-AC_SUBST(hildondesktopmenudir)
 
 AC_OUTPUT([
 Makefile

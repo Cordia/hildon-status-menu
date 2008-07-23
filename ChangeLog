@@ -1,3 +1,19 @@
+2008-07-23  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Get hildonstatusmenudesktopentrydir from
+	libhildondesktop-1.pc file (no more expanding required).
+
+	* src/Makefile.am: Remove unused variables.
+
+2008-07-23  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	reviewed by: <delete if not using a buddy>
+	patch by: <delete if not someone else's patch>
+
+	* configure.ac:
+	* src/Makefile.am:
+	* src/hildon-status-menu.c:
+
 2008-07-22  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* Makefile.am:
