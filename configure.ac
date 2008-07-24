@@ -24,7 +24,6 @@ AC_SUBST(X_CFLAGS)
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
-GTK_DOC_CHECK([1.3])
 
 #++++++++++++++++++
 # Misc build flags
