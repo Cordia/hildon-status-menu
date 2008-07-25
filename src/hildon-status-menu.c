@@ -122,6 +122,8 @@ main (int argc, char **argv)
   window = hildon_window_new ();
   gtk_container_add (GTK_CONTAINER (window), button);
   gtk_widget_show (window);
+  g_signal_connect_swapped (G_OBJECT (window), "destroy",
+		            G_CALLBACK (gtk_widget_destroy), status_menu);
   g_signal_connect (G_OBJECT (window), "destroy",
 		    G_CALLBACK (gtk_main_quit), NULL);
   

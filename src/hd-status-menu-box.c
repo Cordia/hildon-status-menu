@@ -129,9 +129,12 @@ hd_status_menu_box_forall (GtkContainer *container,
 
   priv = HD_STATUS_MENU_BOX (container)->priv;
 
-  for (c = priv->children; c; c = c->next)
+  for (c = priv->children; c; )
     {
       HDStatusMenuBoxChild *info = c->data;
+
+      /* callback could destroy c */
+      c = c->next;
 
       (* callback) (info->widget, data);
     }

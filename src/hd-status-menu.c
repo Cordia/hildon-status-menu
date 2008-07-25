@@ -129,6 +129,8 @@ hd_status_menu_dispose (GObject *object)
       g_object_unref (priv->plugin_manager);
       priv->plugin_manager = NULL;
     }
+
+  G_OBJECT_CLASS (hd_status_menu_parent_class)->dispose (object);
 }
 
 static void

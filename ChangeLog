@@ -1,3 +1,18 @@
+2008-07-25  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Increase veriosn.
+
+	* debian/rules: Simplify rules.
+
+	* src/hd-status-menu-box.c (hd_status_menu_box_forall): Fix problem
+	with an invalid pointer if gtk_widget_destroy() is called.
+
+	* src/hd-status-menu.c (hd_status_menu_dispose): Add Chain up to
+	parent dispose.
+
+	* src/hildon-status-menu.c (main): gtk_widget_destroy() the Status
+	Menu on quit.
+
 2008-07-23  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac:

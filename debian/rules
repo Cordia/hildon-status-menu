@@ -34,16 +34,10 @@ ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -ggdb -DDEBUG
 endif
 
-ifeq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
-ENABLE_GTK_DOC = --enable-gtk-doc
-else
-ENABLE_GTK_DOC = --disable-gtk-doc
-endif
-
 config.status: configure
 	dh_testdir
 # Add here commands to configure the package.
-	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --sysconfdir=/etc --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --disable-dependency-tracking $(ENABLE_GTK_DOC)
+	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --sysconfdir=/etc --disable-dependency-tracking
 
 
 build: build-stamp
@@ -108,16 +102,16 @@ binary-arch: build install
 #	dh_installlogrotate
 #	dh_installemacsen
 #	dh_installpam
-	dh_installmime
+#	dh_installmime
 #	dh_installinit
 #	dh_installcron
 #	dh_installinfo
-	dh_installman
+#	dh_installman
 	dh_link
 	dh_strip --dbg-package="hildon-status-menu"
 	dh_compress
 	dh_fixperms
-	dh_installinit -r -- start 51 2 3 4 . stop 20 0 1 5 6 .
+#	dh_installinit -r -- start 51 2 3 4 . stop 20 0 1 5 6 .
 #	dh_perl
 #	dh_python
 	dh_makeshlibs -V
