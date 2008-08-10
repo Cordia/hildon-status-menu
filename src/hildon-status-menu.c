@@ -35,17 +35,20 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include "hd-status-area.h"
 #include "hd-status-menu.h"
 
 #define HD_STAMP_DIR   "/tmp/osso-appl-states/hildon-desktop/"
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
 
+#if 0
 static void
 show_button_clicked_cb (GtkButton    *button,
                         HDStatusMenu *status_menu)
 {
   gtk_widget_show (GTK_WIDGET (status_menu));
 }
+#endif
 
 /* signal handler, hildon-desktop sends SIGTERM to all tracked applications
  * when it receives SIGTEM itselgf */
@@ -73,11 +76,12 @@ signal_handler (int signal)
 int
 main (int argc, char **argv)
 {
-  GtkWidget *status_menu;
+/*  GtkWidget *status_menu; */
+  GtkWidget *status_area;
   HDConfigFile *config_file;
   HDPluginManager *plugin_manager;
-  GtkWidget *window, *button;
-  HildonProgram *program;
+/*  GtkWidget *window, *button;
+  HildonProgram *program;*/
 
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
@@ -104,16 +108,17 @@ main (int argc, char **argv)
   plugin_manager = hd_plugin_manager_new (config_file, HD_STATUS_MENU_STAMP_FILE);
   g_object_unref (config_file);
 
-  /* Create the status menu */
-  status_menu = hd_status_menu_new (plugin_manager);
+  /* Create simple window to show the Status Menu 
+   */
+  status_area = hd_status_area_new (plugin_manager);
 
   /* Load the configuration of the plugin manager and load plugins */
   hd_plugin_manager_run (plugin_manager);
 
-  /* Create simple window to show the Status Menu 
-   *
-   * FIXME: Should be the Status Area
-   */
+  /* Show Status Area */
+  gtk_widget_show (status_area);
+
+#if 0
   button = gtk_button_new_with_label ("Show Status Menu");
   gtk_widget_show (button);
   g_signal_connect (G_OBJECT (button), "clicked",
@@ -130,6 +135,7 @@ main (int argc, char **argv)
   program = hildon_program_get_instance ();
   g_set_application_name ("Status Menu");
   hildon_program_add_window (program, HILDON_WINDOW (window));
+#endif
 
   gtk_main ();
 

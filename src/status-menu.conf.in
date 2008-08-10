@@ -3,3 +3,8 @@ X-Plugin-Dir=@hildonstatusmenudesktopentrydir@
 X-Load-New-Plugins=true
 X-Load-All-Plugins=true
 X-Debug-Plugins=example-clock.desktop
+
+[X-Status-Area]
+X-Signal-Plugin=@hildondesktoplibdir@/example-signal-status-area-item.so
+X-Battery-Plugin=@hildondesktoplibdir@/example-battery-status-area-item.so
+

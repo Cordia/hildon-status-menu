@@ -12,6 +12,8 @@ hildon_status_menu_SOURCES = \
 	hildon-status-menu.c							\
 	hd-status-area.c							\
 	hd-status-area.h							\
+	hd-status-area-box.c							\
+	hd-status-area-box.h							\
 	hd-status-menu.c							\
 	hd-status-menu.h							\
 	hd-status-menu-box.c							\

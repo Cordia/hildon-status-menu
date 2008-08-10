@@ -1,3 +1,23 @@
+2008-08-10  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Add hildondesktoplibdir variable (get from
+	libhildondesktop-1.pc).
+
+	* src/Makefile.am: Add hd-status-area-box.[ch]
+
+	* src/hd-status-area-box.c:
+	* src/hd-status-area-box.h: Add HDStatusAreaBox container, which
+	displays the visible Status Area icons in two rows from left to right.
+
+	* src/hd-status-area.c:
+	* src/hd-status-area.h: Implement Status Area.
+
+	* src/hildon-status-menu.c (main): Create a Status Menu and use it to
+	open the Status Menu.
+
+	* src/status-menu.conf.in: Add configuration for special (battery and
+	signal) example Status Area icons.
+
 2008-07-25  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Increase veriosn.

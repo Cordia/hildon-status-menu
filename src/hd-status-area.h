@@ -25,6 +25,7 @@
 #include <glib-object.h>
 
 #include <gtk/gtk.h>
+#include <libhildondesktop/libhildondesktop.h>
 
 G_BEGIN_DECLS
 
@@ -35,22 +36,26 @@ G_BEGIN_DECLS
 #define HD_IS_STATUS_AREA_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), HD_TYPE_STATUS_AREA))
 #define HD_STATUS_AREA_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), HD_TYPE_STATUS_AREA, HDStatusAreaClass))
 
-typedef struct _HDStatusAreaClass HDStatusAreaClass;
-typedef struct _HDStatusArea HDStatusArea;
+typedef struct _HDStatusArea        HDStatusArea;
+typedef struct _HDStatusAreaClass   HDStatusAreaClass;
+typedef struct _HDStatusAreaPrivate HDStatusAreaPrivate;
+
+struct _HDStatusArea
+{
+  GtkWindow parent_instance;
+
+  HDStatusAreaPrivate *priv;
+};
 
 struct _HDStatusAreaClass
 {
   GtkWindowClass parent_class;
 };
 
-struct _HDStatusArea
-{
-  GtkWindow parent_instance;
-};
 
 GType      hd_status_area_get_type (void) G_GNUC_CONST;
 
-GtkWidget *hd_status_area_new      (void);
+GtkWidget *hd_status_area_new      (HDPluginManager *plugin_manager);
 
 G_END_DECLS
 
