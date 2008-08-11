@@ -1,3 +1,9 @@
+hildon-status-menu (0.2.0) unreleased; urgency=low
+
+  * New release with Status Area.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 11 Aug 2008 13:30:20 +0300
+
 hildon-status-menu (0.1.1) unreleased; urgency=low
 
   * Removed GTK_DOC_CHECK from configure.ac

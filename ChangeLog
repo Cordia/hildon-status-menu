@@ -1,3 +1,7 @@
+2008-08-11  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.2.0
+
 2008-08-10  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Add hildondesktoplibdir variable (get from

@@ -1,4 +1,4 @@
-AC_INIT([hildon-status-menu], [0.1.1])
+AC_INIT([hildon-status-menu], [0.2.0])
 AC_CANONICAL_SYSTEM
 
 AM_CONFIG_HEADER(config.h)
