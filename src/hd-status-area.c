@@ -46,6 +46,7 @@
 #define HD_STATUS_AREA_KEYFILE_GROUP          "X-Status-Area"
 #define HD_STATUS_AREA_KEYFILE_SIGNAL_PLUGIN  "X-Signal-Plugin"
 #define HD_STATUS_AREA_KEYFILE_BATTERY_PLUGIN "X-Battery-Plugin"
+#define HD_STATUS_AREA_KEYFILE_CLOCK_PLUGIN   "X-Clock-Plugin"
 
 #define HD_STATUS_AREA_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_AREA, HDStatusAreaPrivate));
 
@@ -68,7 +69,9 @@ struct _HDStatusAreaPrivate
 
   GtkWidget *signal_image, *battery_image;
 
-  gchar *signal_plugin, *battery_plugin;
+  GtkWidget *clock_box;
+
+  gchar *signal_plugin, *battery_plugin, *clock_plugin;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -93,10 +96,7 @@ hd_status_area_init (HDStatusArea *status_area)
   /* UI Style guide */
   GtkWidget *ebox, *alignment, *main_hbox, *left_vbox;
 
-  GtkWidget *left_top_row, *left_hsep, *left_bottom_row;
-
-  GtkWidget *clock_box, *clock_label, *clock_ampm_image;
-  GtkWidget *alarm_image;
+  GtkWidget *left_top_row, *left_hsep;
 
   /* Set priv member */
   status_area->priv = priv;
@@ -126,8 +126,9 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_set_size_request (left_hsep, -1, 8);
   gtk_widget_show (left_hsep);
 
-  left_bottom_row = gtk_hbox_new (FALSE, 8);
-  gtk_widget_show (left_bottom_row);
+  priv->clock_box = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_size_request (priv->clock_box, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT);
+  gtk_widget_show (priv->clock_box);
 
   priv->signal_image = gtk_image_new ();
   gtk_widget_set_size_request (priv->signal_image, SPECIAL_ICON_WIDTH, STATUS_AREA_ICON_HEIGHT);
@@ -136,22 +137,6 @@ hd_status_area_init (HDStatusArea *status_area)
   priv->battery_image = gtk_image_new ();
   gtk_widget_set_size_request (priv->battery_image, SPECIAL_ICON_WIDTH, STATUS_AREA_ICON_HEIGHT);
   gtk_widget_show (priv->battery_image);
-
-  clock_box = gtk_hbox_new (FALSE, 4);
-  gtk_widget_show (clock_box);
-
-  clock_label = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (clock_label), "<span font_desc=\"12\">15:48</span>");
-  gtk_widget_set_size_request (clock_label, -1, 16);
-  gtk_widget_show (clock_label);
-
-  clock_ampm_image = gtk_image_new ();
-/*  gtk_image_set_from_file (GTK_IMAGE (clock_ampm_image), "ampm.png");*/
-  gtk_widget_show (clock_ampm_image);
-
-  alarm_image = gtk_image_new ();
-/*  gtk_image_set_from_file (GTK_IMAGE (alarm_image), "alarm.png");*/
-  gtk_widget_show (alarm_image);
 
   priv->icon_box = hd_status_area_box_new ();
   gtk_widget_show (priv->icon_box);
@@ -164,14 +149,10 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_box_pack_start (GTK_BOX (main_hbox), priv->icon_box, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (left_vbox), left_top_row, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (left_vbox), left_hsep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (left_vbox), left_bottom_row, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (left_vbox), priv->clock_box, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (left_top_row), priv->signal_image, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (left_top_row), priv->battery_image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (left_bottom_row), clock_box, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (left_bottom_row), alarm_image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (clock_box), clock_label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (clock_box), clock_ampm_image, FALSE, FALSE, 0);
 }
 
 static GObject *
@@ -251,6 +232,7 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
                                 HDStatusArea    *status_area)
 {
   HDStatusAreaPrivate *priv = status_area->priv;
+  gchar *plugin_id;
   GtkWidget *image;
 
   /* Plugin must be a HDStatusMenuItem */
@@ -259,17 +241,32 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
 
   g_object_ref (plugin);
 
+  plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (plugin));
+
+  /* Check if plugin is the special clock plugin */
+  if (priv->clock_plugin && strcmp (priv->clock_plugin, plugin_id) == 0)
+    {
+      GtkWidget *clock_widget;
+
+      g_object_get (plugin,
+                    "status-area-widget", &clock_widget,
+                    NULL);
+
+      gtk_box_pack_start (GTK_BOX (priv->clock_box), clock_widget, FALSE, FALSE, 0);
+
+      g_object_unref (clock_widget);
+
+      g_free (plugin_id);
+      return;
+    }
+
   /* Check if plugin is the special battery or signal item */
-  if (priv->signal_plugin != NULL &&
-      strcmp (priv->signal_plugin,
-              hd_status_plugin_item_get_dl_filename (HD_STATUS_PLUGIN_ITEM (plugin))) == 0)
+  if (priv->signal_plugin && strcmp (priv->signal_plugin, plugin_id) == 0)
     {
       image = priv->signal_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
     }
-  else if (priv->battery_plugin != NULL &&
-           strcmp (priv->battery_plugin,
-                   hd_status_plugin_item_get_dl_filename (HD_STATUS_PLUGIN_ITEM (plugin))) == 0)
+  else if (priv->battery_plugin && strcmp (priv->battery_plugin, plugin_id) == 0)
     {
       image = priv->battery_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
@@ -286,6 +283,8 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
   g_signal_connect (plugin, "notify::status-area-icon",
                     G_CALLBACK (status_area_icon_changed), NULL);
   status_area_icon_changed (HD_STATUS_PLUGIN_ITEM (plugin));
+
+  g_free (plugin_id);
 }
 
 static void
@@ -293,16 +292,27 @@ hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
                                   GObject         *plugin,
                                   HDStatusArea    *status_area)
 {
-//  HDStatusAreaPrivate *priv = status_area->priv;
+  HDStatusAreaPrivate *priv = status_area->priv;
 
   /* Plugin must be a HDStatusMenuItem */
   if (!HD_IS_STATUS_PLUGIN_ITEM (plugin))
     return;
 
-  g_signal_handlers_disconnect_by_func (plugin,
-                                        status_area_icon_changed,
-                                        NULL);
-  g_object_set_qdata (plugin, quark_hd_status_area_image, NULL);
+  if (g_object_get_qdata (plugin, quark_hd_status_area_image))
+    {
+      /* Disconnect signal handler */
+      g_signal_handlers_disconnect_by_func (plugin,
+                                            status_area_icon_changed,
+                                            NULL);
+      /* Reset image and destroy it if created in plugin_added_cb */
+      g_object_set_qdata (plugin, quark_hd_status_area_image, NULL);
+    }
+  else
+    {
+      /* Remove all widgets from the clock box */
+      gtk_container_foreach (GTK_CONTAINER (priv->clock_box), (GtkCallback) gtk_widget_destroy, NULL);
+    }
+
   g_object_unref (plugin);
 }
 
@@ -315,6 +325,7 @@ hd_status_area_configuration_loaded_cb (HDPluginManager *plugin_manager,
 
   g_free (priv->signal_plugin);
   g_free (priv->battery_plugin);
+  g_free (priv->clock_plugin);
 
   priv->signal_plugin = g_key_file_get_string (keyfile,
                                                HD_STATUS_AREA_KEYFILE_GROUP,
@@ -324,6 +335,10 @@ hd_status_area_configuration_loaded_cb (HDPluginManager *plugin_manager,
                                                 HD_STATUS_AREA_KEYFILE_GROUP,
                                                 HD_STATUS_AREA_KEYFILE_BATTERY_PLUGIN,
                                                 NULL);
+  priv->clock_plugin = g_key_file_get_string (keyfile,
+                                              HD_STATUS_AREA_KEYFILE_GROUP,
+                                              HD_STATUS_AREA_KEYFILE_CLOCK_PLUGIN,
+                                              NULL);
 }
 
 static void

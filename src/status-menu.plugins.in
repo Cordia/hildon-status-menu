@@ -1,0 +1,12 @@
+[example-clock.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-clock.desktop
+X-Priority=0
+
+[example-signal.desktopX-Pri
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-signal.desktop
+X-Priority=1
+
+[example-battery.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-battery.desktop
+X-Priority=2
+

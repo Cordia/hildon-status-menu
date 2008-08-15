@@ -73,7 +73,7 @@ AC_SUBST(HILDON_LIBS)
 AC_SUBST(HILDON_CFLAGS)
 
 PKG_CHECK_MODULES(LIBHILDONDESKTOP,
-                  [libhildondesktop-1 >= 2.1.1], 
+                  [libhildondesktop-1 >= 2.1.2], 
                   [AC_DEFINE(HAVE_LIBHILDONDESKTOP, [], [Whether libhildondesktop-1 is present on the system])], 
                   [])
 
@@ -101,5 +101,6 @@ AC_OUTPUT([
 Makefile
 hildon-status-menu.desktop
 src/status-menu.conf
+src/status-menu.plugins
 src/Makefile
 ])

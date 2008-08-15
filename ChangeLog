@@ -1,3 +1,25 @@
+2008-08-15  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Require new libhildondesktop version.
+
+	* debian/hildon-status-menu.install: Install status-menu.plugins file.
+
+	* src/hd-status-area.c (hd_status_area_init, hd_status_area_plugin_added_cb,
+	  hd_status_area_plugin_removed_cb,
+	  hd_status_area_configuration_loaded_cb): Add support for embedding
+	  a clock widget in the Status Area. Use the plugin ids (.desktop file
+	  names) to identify the plugins instead of the dl filenames.
+
+	* src/status-menu.conf.in: Add X-Plugin-Configuration key. Use
+	.desktop file names (plugin id) instead of dl filenames for the
+	X-Signal-Plugin and X-Battery-Plugin keys. Add X-Clock-Plugin key.
+
+	* src/status-menu.plugins.in: Add Plugin configuration file for plugin
+	loading priority and the position of the item in the Status Area and
+	Status Menu.
+
+	* src/Makefile.am: Install status-menu.plugins file.
+
 2008-08-11  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.2.0

@@ -1,6 +1,8 @@
 bin_PROGRAMS = hildon-status-menu
 
-hildondesktopconf_DATA = status-menu.conf
+hildondesktopconf_DATA = \
+	status-menu.conf	\
+	status-menu.plugins
 
 hildon_status_menu_CFLAGS = \
 	$(HILDON_CFLAGS)							\
