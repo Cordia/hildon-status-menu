@@ -70,8 +70,6 @@ struct _HDStatusAreaPrivate
   GtkWidget *signal_image, *battery_image;
 
   GtkWidget *clock_box;
-
-  gchar *signal_plugin, *battery_plugin, *clock_plugin;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -191,11 +189,6 @@ hd_status_area_dispose (GObject *object)
 static void
 hd_status_area_finalize (GObject *object)
 {
-  HDStatusAreaPrivate *priv = HD_STATUS_AREA (object)->priv;
-
-  g_free (priv->signal_plugin);
-  g_free (priv->battery_plugin);
-
   G_OBJECT_CLASS (hd_status_area_parent_class)->finalize (object);
 }
 
@@ -234,6 +227,8 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
   HDStatusAreaPrivate *priv = status_area->priv;
   gchar *plugin_id;
   GtkWidget *image;
+  GKeyFile *keyfile;
+  gchar *permanent_item;
 
   /* Plugin must be a HDStatusMenuItem */
   if (!HD_IS_STATUS_PLUGIN_ITEM (plugin))
@@ -241,10 +236,20 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
 
   g_object_ref (plugin);
 
+  /* Read position in Status Menu from plugin configuration */
+  keyfile = hd_plugin_manager_get_plugin_config_key_file (plugin_manager);
   plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (plugin));
 
+  /* Check if the plugin one of the permament plugins on the left
+   * side of the Status Area
+   */
+  permanent_item = g_key_file_get_string (keyfile,
+                                          plugin_id,
+                                          "X-Status-Area-Permanent-Item",
+                                          NULL);
+
   /* Check if plugin is the special clock plugin */
-  if (priv->clock_plugin && strcmp (priv->clock_plugin, plugin_id) == 0)
+  if (permanent_item && strcmp ("Clock", permanent_item) == 0)
     {
       GtkWidget *clock_widget;
 
@@ -261,23 +266,40 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
     }
 
   /* Check if plugin is the special battery or signal item */
-  if (priv->signal_plugin && strcmp (priv->signal_plugin, plugin_id) == 0)
+  if (permanent_item && strcmp ("Signal", permanent_item) == 0)
     {
       image = priv->signal_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
     }
-  else if (priv->battery_plugin && strcmp (priv->battery_plugin, plugin_id) == 0)
+  else if (permanent_item && strcmp ("Battery", permanent_item) == 0)
     {
       image = priv->battery_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
     }
   else
     {
+      guint position;
+      GError *error = NULL;
+
       /* Create GtkImage to display the icon */
       image = gtk_image_new ();
       g_object_set_qdata_full (plugin, quark_hd_status_area_image,
                                image, (GDestroyNotify) gtk_widget_destroy);
-      gtk_container_add (GTK_CONTAINER (priv->icon_box), image);
+
+      /* Get position */
+      position = (guint) g_key_file_get_integer (keyfile,
+                                                 plugin_id,
+                                                 "X-Status-Area-Position",
+                                                 &error);
+      if (error)
+        {
+          g_error_free (error);
+          position = G_MAXUINT;
+        }
+
+      hd_status_area_box_pack (HD_STATUS_AREA_BOX (priv->icon_box),
+                               image,
+                               position);
     }
 
   g_signal_connect (plugin, "notify::status-area-icon",
@@ -317,28 +339,10 @@ hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
 }
 
 static void
-hd_status_area_configuration_loaded_cb (HDPluginManager *plugin_manager,
-                                        GKeyFile        *keyfile,
-                                        HDStatusArea    *status_area)
+hd_status_area_plugin_configuration_loaded_cb (HDPluginManager *plugin_manager,
+                                               GKeyFile        *keyfile,
+                                               HDStatusArea    *status_area)
 {
-  HDStatusAreaPrivate *priv = status_area->priv;
-
-  g_free (priv->signal_plugin);
-  g_free (priv->battery_plugin);
-  g_free (priv->clock_plugin);
-
-  priv->signal_plugin = g_key_file_get_string (keyfile,
-                                               HD_STATUS_AREA_KEYFILE_GROUP,
-                                               HD_STATUS_AREA_KEYFILE_SIGNAL_PLUGIN,
-                                               NULL);
-  priv->battery_plugin = g_key_file_get_string (keyfile,
-                                                HD_STATUS_AREA_KEYFILE_GROUP,
-                                                HD_STATUS_AREA_KEYFILE_BATTERY_PLUGIN,
-                                                NULL);
-  priv->clock_plugin = g_key_file_get_string (keyfile,
-                                              HD_STATUS_AREA_KEYFILE_GROUP,
-                                              HD_STATUS_AREA_KEYFILE_CLOCK_PLUGIN,
-                                              NULL);
 }
 
 static void
@@ -360,8 +364,8 @@ hd_status_area_set_property (GObject      *object,
                                    G_CALLBACK (hd_status_area_plugin_added_cb), object, 0);
           g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-removed",
                                    G_CALLBACK (hd_status_area_plugin_removed_cb), object, 0);
-          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "configuration-loaded",
-                                   G_CALLBACK (hd_status_area_configuration_loaded_cb), object, 0);
+          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-configuration-loaded",
+                                   G_CALLBACK (hd_status_area_plugin_configuration_loaded_cb), object, 0);
         }
       else
         g_warning ("plugin-manager should not be NULL");
@@ -376,20 +380,24 @@ static void
 hd_status_area_realize (GtkWidget *widget)
 {
   GdkDisplay *display;
-  Atom atom;
-  const gchar *notification_type = "_HILDON_WM_WINDOW_TYPE_APP_MENU";
+  Atom atom, wm_type;
 
   GTK_WIDGET_CLASS (hd_status_area_parent_class)->realize (widget);
 
   /* Use only a border as decoration */
   gdk_window_set_decorations (widget->window, 0);
 
-  /* Set the _NET_WM_WINDOW_TYPE property (copied from HildonAppMenu) */
+  /* Set the _NET_WM_WINDOW_TYPE property to _HILDON_WM_WINDOW_TYPE_STATUS_AREA */
   display = gdk_drawable_get_display (widget->window);
-  atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE");
-  XChangeProperty (GDK_WINDOW_XDISPLAY (widget->window), GDK_WINDOW_XID (widget->window),
-                   atom, XA_STRING, 8, PropModeReplace, (guchar *) notification_type,
-                   strlen (notification_type));
+  atom = gdk_x11_get_xatom_by_name_for_display (display,
+                                                "_NET_WM_WINDOW_TYPE");
+  wm_type = gdk_x11_get_xatom_by_name_for_display (display,
+                                                   "_HILDON_WM_WINDOW_TYPE_STATUS_AREA");
+
+  XChangeProperty (GDK_WINDOW_XDISPLAY (widget->window),
+                   GDK_WINDOW_XID (widget->window),
+                   atom, XA_ATOM, 32, PropModeReplace,
+                   (unsigned char *)&wm_type, 1);
 }
 
 static void

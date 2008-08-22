@@ -3,10 +3,3 @@ X-Plugin-Dir=@hildonstatusmenudesktopentrydir@
 X-Load-New-Plugins=true
 X-Load-All-Plugins=true
 X-Plugin-Configuration=status-menu.plugins
-
-[X-Status-Area]
-X-Signal-Plugin=example-signal.desktop
-X-Battery-Plugin=example-battery.desktop
-X-Clock-Plugin=example-clock.desktop
-
-

@@ -58,24 +58,7 @@ static void
 hd_status_menu_box_add (GtkContainer *container,
                         GtkWidget    *child)
 {
-  HDStatusMenuBoxPrivate *priv;
-  HDStatusMenuBoxChild *info;
-
-  g_return_if_fail (HD_IS_STATUS_MENU_BOX (container));
-  g_return_if_fail (GTK_IS_WIDGET (child));
-  g_return_if_fail (gtk_widget_get_parent (child) == NULL);
-
-  priv = HD_STATUS_MENU_BOX (container)->priv;
-
-  info = g_slice_new0 (HDStatusMenuBoxChild);
-  info->widget = child;
-  info->priority = G_MAXUINT;
-
-  priv->children = g_list_insert_sorted (priv->children,
-                                         info,
-                                         hd_status_menu_box_cmp_priority);
-
-  gtk_widget_set_parent (child, GTK_WIDGET (container));  
+  hd_status_menu_box_pack (HD_STATUS_MENU_BOX (container), child, G_MAXUINT);
 }
 
 static void
@@ -277,4 +260,65 @@ hd_status_menu_box_new (void)
                       NULL);
 
   return box;
+}
+
+void
+hd_status_menu_box_pack (HDStatusMenuBox *box,
+                         GtkWidget       *child,
+                         guint            position)
+{
+  HDStatusMenuBoxPrivate *priv;
+  HDStatusMenuBoxChild *info;
+
+  g_return_if_fail (HD_IS_STATUS_MENU_BOX (box));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+  g_return_if_fail (gtk_widget_get_parent (child) == NULL);
+
+  priv = box->priv;
+
+  info = g_slice_new0 (HDStatusMenuBoxChild);
+  info->widget = child;
+  info->priority = position;
+
+  priv->children = g_list_insert_sorted (priv->children,
+                                         info,
+                                         hd_status_menu_box_cmp_priority);
+
+  gtk_widget_set_parent (child, GTK_WIDGET (box));
+}
+
+void
+hd_status_menu_box_reorder_child (HDStatusMenuBox *box,
+                                  GtkWidget       *child,
+                                  guint            position)
+{
+  HDStatusMenuBoxPrivate *priv;
+  GList *c;
+
+  g_return_if_fail (HD_IS_STATUS_MENU_BOX (box));
+  g_return_if_fail (GTK_IS_WIDGET (child));
+  g_return_if_fail (gtk_widget_get_parent (child) == GTK_WIDGET (box));
+
+  priv = box->priv;
+
+  for (c = priv->children; c; c = c->next)
+    {
+      HDStatusMenuBoxChild *info = c->data;
+
+      if (info->widget == child)
+        {
+          if (info->priority != position)
+            {
+              info->priority = position;
+
+              /* Reorder children list */
+              priv->children = g_list_delete_link (priv->children, c);
+              priv->children = g_list_insert_sorted (priv->children,
+                                                     info,
+                                                     hd_status_menu_box_cmp_priority);
+            }
+
+          break;
+        }
+    }
 }

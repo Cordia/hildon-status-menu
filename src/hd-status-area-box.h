@@ -49,10 +49,16 @@ struct _HDStatusAreaBoxClass
   GtkContainerClass parent;
 };
 
-GType      hd_status_area_box_get_type (void) G_GNUC_CONST;
+GType      hd_status_area_box_get_type      (void) G_GNUC_CONST;
 
-GtkWidget *hd_status_area_box_new      (void);
+GtkWidget *hd_status_area_box_new           (void);
 
+void       hd_status_area_box_pack          (HDStatusAreaBox *box,
+                                             GtkWidget       *child,
+                                             guint            position);
+void       hd_status_area_box_reorder_child (HDStatusAreaBox *box,
+                                             GtkWidget       *child,
+                                             guint            position);
 G_END_DECLS
 
 #endif /* __HD_STATUS_AREA_BOX_H__ */

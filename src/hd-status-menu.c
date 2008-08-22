@@ -88,6 +88,7 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   /* Set priv member */
   status_menu->priv = priv;
 
+  /* Create widgets */
   priv->box = hd_status_menu_box_new ();
   gtk_widget_show (priv->box);
 
@@ -139,15 +140,35 @@ hd_status_menu_plugin_added_cb (HDPluginManager *plugin_manager,
                                 HDStatusMenu    *status_menu)
 {
   HDStatusMenuPrivate *priv = status_menu->priv;
+  gchar *plugin_id;
+  GKeyFile *keyfile;
+  guint position;
+  GError *error = NULL;
 
   /* Plugin must be a HDStatusMenuItem */
   if (!HD_IS_STATUS_MENU_ITEM (plugin))
     return;
 
+  /* Read position in Status Menu from plugin configuration */
+  keyfile = hd_plugin_manager_get_plugin_config_key_file (plugin_manager);
+  plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (plugin));
+
+  position = (guint) g_key_file_get_integer (keyfile,
+                                             plugin_id,
+                                             "X-Status-Menu-Position",
+                                             &error);
+  g_free (plugin_id);
+
+  if (error)
+    {
+      g_error_free (error);
+      position = G_MAXUINT;
+    }
+
   /* Pack the plugin into the box. The plugin is responsible to show 
    * the widget (required to support temporary visible items).
    */
-  gtk_container_add (GTK_CONTAINER (priv->box), GTK_WIDGET (plugin));
+  hd_status_menu_box_pack (HD_STATUS_MENU_BOX (priv->box), GTK_WIDGET (plugin), position);
 }
 
 static void
@@ -165,6 +186,42 @@ hd_status_menu_plugin_removed_cb (HDPluginManager *plugin_manager,
   gtk_container_remove (GTK_CONTAINER (priv->box), GTK_WIDGET (plugin));
 }
 
+static void
+update_position (GtkWidget *child,
+                 GKeyFile  *keyfile)
+{
+  gchar *plugin_id;
+  guint position;
+  GError *error = NULL;
+
+  plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (child));
+
+  position = (guint) g_key_file_get_integer (keyfile,
+                                             plugin_id,
+                                             "X-Status-Menu-Position",
+                                             &error);
+  g_free (plugin_id);
+
+  if (error)
+    {
+      g_error_free (error);
+      position = G_MAXUINT;
+    }
+
+  hd_status_menu_box_reorder_child (HD_STATUS_MENU_BOX (gtk_widget_get_parent (child)),
+                                    child,
+                                    position);
+}
+
+static void
+hd_status_menu_plugin_configuration_loaded_cb (HDPluginManager *plugin_manager,
+                                               GKeyFile        *key_file,
+                                               HDStatusMenu    *status_menu)
+{
+  HDStatusMenuPrivate *priv = status_menu->priv;
+
+  gtk_container_foreach (GTK_CONTAINER (priv->box), (GtkCallback) update_position, key_file);
+}
 
 static void
 hd_status_menu_set_property (GObject      *object,
@@ -185,6 +242,8 @@ hd_status_menu_set_property (GObject      *object,
                                    G_CALLBACK (hd_status_menu_plugin_added_cb), object, 0);
           g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-removed",
                                    G_CALLBACK (hd_status_menu_plugin_removed_cb), object, 0);
+          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-configuration-loaded",
+                                   G_CALLBACK (hd_status_menu_plugin_configuration_loaded_cb), object, 0);
         }
       else
         g_warning ("plugin-manager should not be NULL");
@@ -199,20 +258,24 @@ static void
 hd_status_menu_realize (GtkWidget *widget)
 {
   GdkDisplay *display;
-  Atom atom;
-  const gchar *notification_type = "_HILDON_WM_WINDOW_TYPE_APP_MENU";
+  Atom atom, wm_type;
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->realize (widget);
 
   /* Use only a border as decoration */
   gdk_window_set_decorations (widget->window, GDK_DECOR_BORDER);
 
-  /* Set the _NET_WM_WINDOW_TYPE property (copied from HildonAppMenu) */
+  /* Set the _NET_WM_WINDOW_TYPE property to _HILDON_WM_WINDOW_TYPE_STATUS_AREA */
   display = gdk_drawable_get_display (widget->window);
-  atom = gdk_x11_get_xatom_by_name_for_display (display, "_NET_WM_WINDOW_TYPE");
-  XChangeProperty (GDK_WINDOW_XDISPLAY (widget->window), GDK_WINDOW_XID (widget->window),
-                   atom, XA_STRING, 8, PropModeReplace, (guchar *) notification_type,
-                   strlen (notification_type));
+  atom = gdk_x11_get_xatom_by_name_for_display (display,
+                                                "_NET_WM_WINDOW_TYPE");
+  wm_type = gdk_x11_get_xatom_by_name_for_display (display,
+                                                   "_HILDON_WM_WINDOW_TYPE_STATUS_MENU");
+
+  XChangeProperty (GDK_WINDOW_XDISPLAY (widget->window),
+                   GDK_WINDOW_XID (widget->window),
+                   atom, XA_ATOM, 32, PropModeReplace,
+                   (unsigned char *)&wm_type, 1);
 }
 
 #if 0

@@ -1,12 +1,27 @@
 [example-clock.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-clock.desktop
-X-Priority=0
+X-Status-Area-Permanent-Item=Clock
+X-Status-Menu-Position=1
 
-[example-signal.desktopX-Pri
+[example-signal.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-signal.desktop
-X-Priority=1
+X-Status-Area-Permanent-Item=Signal
 
 [example-battery.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-battery.desktop
-X-Priority=2
+X-Status-Area-Permanent-Item=Battery
 
+[example-icon.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-icon.desktop
+X-Status-Menu-Position=5
+X-Status-Area-Position=3
+
+[example-button.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-button.desktop
+X-Status-Menu-Position=100
+X-Status-Area-Position=1
+
+[example-volume.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-volume.desktop
+X-Status-Menu-Position=4
+X-Status-Area-Position=2

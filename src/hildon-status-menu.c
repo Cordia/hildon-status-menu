@@ -72,6 +72,46 @@ signal_handler (int signal)
   }
 }
 
+static guint
+load_priority_func (const gchar *plugin_id,
+                    GKeyFile    *keyfile,
+                    gpointer     data)
+{
+  GError *error = NULL;
+  guint priority = G_MAXUINT;
+
+  /* The permament status area items (clock, signal and
+   * battery) should be loaded first (priority == 0) */
+  if (g_key_file_has_key (keyfile,
+                          plugin_id,
+                          "X-Status-Area-Permanent-Item",
+                          NULL))
+    return 0;
+
+  /* Then the plugins should be loaded regarding to there
+   * position in the status area. */
+  priority = (guint) g_key_file_get_integer (keyfile,
+                                             plugin_id,
+                                             "X-Status-Area-Position",
+                                             &error);
+  if (error == NULL)
+    return priority;
+
+  /* If position is not set, load last (priority == max) */
+  g_error_free (error);
+
+  return G_MAXUINT;
+}
+
+static gboolean
+load_plugins_idle (gpointer data)
+{
+
+  /* Load the configuration of the plugin manager and load plugins */
+  hd_plugin_manager_run (HD_PLUGIN_MANAGER (data));
+
+  return FALSE;
+}
 
 int
 main (int argc, char **argv)
@@ -80,6 +120,7 @@ main (int argc, char **argv)
   GtkWidget *status_area;
   HDConfigFile *config_file;
   HDPluginManager *plugin_manager;
+  gchar *user_config_dir;
 /*  GtkWidget *window, *button;
   HildonProgram *program;*/
 
@@ -98,44 +139,36 @@ main (int argc, char **argv)
 
   signal (SIGTERM, signal_handler);
 
+  /* User configuration directory (~/) */
+  user_config_dir = g_build_filename (g_get_user_config_dir (),
+                                      "hildon-desktop",
+                                      NULL);
+  g_debug ("User config dir: %s", user_config_dir);
+
   /* Create a config file for the plugin manager
    *
-   * FIXME: HDPluginManager could be a subclass of HDConfigFile.
    */
   config_file = hd_config_file_new (HD_DESKTOP_CONFIG_PATH,
-                                    NULL,
+                                    user_config_dir,
                                     "status-menu.conf");
   plugin_manager = hd_plugin_manager_new (config_file, HD_STATUS_MENU_STAMP_FILE);
   g_object_unref (config_file);
+  g_free (user_config_dir);
+
+  /* Set the load priority function */
+  hd_plugin_manager_set_load_priority_func (plugin_manager,
+                                            load_priority_func,
+                                            NULL,
+                                            NULL);
 
   /* Create simple window to show the Status Menu 
    */
   status_area = hd_status_area_new (plugin_manager);
 
-  /* Load the configuration of the plugin manager and load plugins */
-  hd_plugin_manager_run (plugin_manager);
-
   /* Show Status Area */
   gtk_widget_show (status_area);
 
-#if 0
-  button = gtk_button_new_with_label ("Show Status Menu");
-  gtk_widget_show (button);
-  g_signal_connect (G_OBJECT (button), "clicked",
-                    G_CALLBACK (show_button_clicked_cb), status_menu);
-
-  window = hildon_window_new ();
-  gtk_container_add (GTK_CONTAINER (window), button);
-  gtk_widget_show (window);
-  g_signal_connect_swapped (G_OBJECT (window), "destroy",
-		            G_CALLBACK (gtk_widget_destroy), status_menu);
-  g_signal_connect (G_OBJECT (window), "destroy",
-		    G_CALLBACK (gtk_main_quit), NULL);
-  
-  program = hildon_program_get_instance ();
-  g_set_application_name ("Status Menu");
-  hildon_program_add_window (program, HILDON_WINDOW (window));
-#endif
+  gdk_threads_add_idle (load_plugins_idle, plugin_manager);
 
   gtk_main ();
 

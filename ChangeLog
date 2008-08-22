@@ -1,3 +1,38 @@
+2008-08-22  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-area-box.h:
+	* src/hd-status-area-box.c (hd_status_area_box_add,
+	  hd_status_area_box_pack): Add a function to pack a child into the
+	  box with a position.
+	  (hd_status_area_box_reorder_child): Add a function to update the
+	  position of a child widget in the box.
+
+	* src/hd-status-area.c (hd_status_area_plugin_added_cb): Use the
+	plugin configuration to place the item at a specified position.
+	  (hd_status_area_realize): Update the _NET_WM_WINDOW_TYPE of the
+	  window.
+
+	* src/hd-status-menu-box.h:
+	* src/hd-status-menu-box.c (hd_status_menu_box_add,
+	  hd_status_menu_box_pack): Add a function to pack a child into the
+	  box with a position.
+	  (hd_status_menu_box_reorder_child): Add a function to update the
+	  position of a child widget in the box.
+
+	* src/hd-status-menu.c (hd_status_menu_plugin_added_cb): Use the
+	plugin configuration to place the plugins at specific positions.
+	  (update_position, hd_status_menu_plugin_configuration_loaded_cb):
+	  Update the plugin positions if the plugin configuration changed.
+	  (hd_status_menu_realize):  Update the _NET_WM_WINDOW_TYPE of the
+	  window.
+
+	* src/hildon-status-menu.c (load_priority_func, main): Use the
+	position in the Status Area as the load priority of the plugin.
+
+	* src/status-menu.conf.in: Move Status Area configuration to the
+	.plugins file.
+	* src/status-menu.plugins.in: Add new Status Area configuration.
+
 2008-08-15  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Require new libhildondesktop version.
