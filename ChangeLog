@@ -1,5 +1,9 @@
 2008-08-22  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* configure.ac: Update required libhildondesktop version.
+
+2008-08-22  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-area-box.h:
 	* src/hd-status-area-box.c (hd_status_area_box_add,
 	  hd_status_area_box_pack): Add a function to pack a child into the
