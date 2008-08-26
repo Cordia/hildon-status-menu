@@ -67,7 +67,7 @@ AC_SUBST(CFLAGS)
 PKG_CHECK_MODULES(HILDON,
                   [hildon-1], 
                   [AC_DEFINE(HAVE_LIBHILDON, [], [Whether libhildon-1 is present on the system])], 
-                  [PKG_CHECK_MODULES(HILDON, hildon-1 >= 2.1.0)])
+                  [PKG_CHECK_MODULES(HILDON, hildon-1 >= 2.1.4)])
 
 AC_SUBST(HILDON_LIBS)
 AC_SUBST(HILDON_CFLAGS)

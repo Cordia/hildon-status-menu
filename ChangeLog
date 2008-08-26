@@ -1,5 +1,27 @@
 2008-08-26  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* configure.ac: Update hildon-1 dependency.
+
+	* src/hd-status-menu-box.c (hd_status_menu_box_get_property,
+	  hd_status_menu_box_class_init): Add readable ::visible-items
+	  property, which contains the number of visible items.
+	  (hd_status_menu_box_size_allocate): Use the avaiable allocation, to
+	  calculate the width of the child widgets.
+	  (hd_status_menu_box_size_request): Update ::visible-items property
+	  if it changes.
+
+	* src/hd-status-menu.c (notify_visible_items_cb): Update the size
+	  request of the pannable area if the number of visible children
+	  changes.
+	  (hd_status_menu_init): Update pannable area property names. Use
+	  a GtkAlignment to center the pannable area in the window.
+	  (hd_status_menu_check_resize): Resize the window to the requested
+	  size.
+	  (hd_status_menu_class_init): Override
+	  GtkContainerClass::check_resize function.
+
+2008-08-26  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-area.c (hd_status_area_check_resize): Resize the
 	window to the requested size.
 	  (hd_status_area_class_init): Override

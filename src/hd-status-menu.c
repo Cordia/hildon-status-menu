@@ -80,39 +80,57 @@ struct _HDStatusMenuPrivate
 G_DEFINE_TYPE (HDStatusMenu, hd_status_menu, GTK_TYPE_WINDOW);
 
 static void
+notify_visible_items_cb (GObject      *object,
+                         GParamSpec   *spec,
+                         HDStatusMenu *status_menu)
+{
+  HDStatusMenuPrivate *priv = status_menu->priv;
+  guint visible_items;
+
+  g_object_get (object,
+                "visible-items", &visible_items,
+                NULL);
+
+  gtk_widget_set_size_request (priv->pannable,
+                               656,
+                               MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
+}
+
+static void
 hd_status_menu_init (HDStatusMenu *status_menu)
 {
   HDStatusMenuPrivate *priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
-  GtkWidget *hbox, *vbox; /* Used to center the pannable */
+  GtkWidget *alignment; /* Used to center the pannable */
 
   /* Set priv member */
   status_menu->priv = priv;
 
   /* Create widgets */
   priv->box = hd_status_menu_box_new ();
+  g_signal_connect (G_OBJECT (priv->box), "notify::visible-items",
+                    G_CALLBACK (notify_visible_items_cb), status_menu);
   gtk_widget_show (priv->box);
 
   priv->pannable = hildon_pannable_area_new ();
-  g_object_set (G_OBJECT (priv->pannable), "hindicator-mode", HILDON_PANNABLE_AREA_INDICATOR_MODE_HIDE, NULL);
-  /* FIXME: Should there be a vertival indicator or not? */
-  g_object_set (G_OBJECT (priv->pannable), "vindicator-mode", HILDON_PANNABLE_AREA_INDICATOR_MODE_HIDE, NULL);
-  /* FIXME: Requires HildonPannableArea from sandbox */
-  /* g_object_set (G_OBJECT (priv->pannable), "mov-mode", HILDON_PANNABLE_AREA_INDICATOR_MOV_MODE_VERTICAL, NULL); */
-  /* FIXME: Should use dynamic size */
-  gtk_widget_set_size_request (priv->pannable, 656, 280);
+  g_object_set (G_OBJECT (priv->pannable),
+                "hscrollbar-policy", GTK_POLICY_NEVER,
+                "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+/* FIXME: unreleased hildon-1 >= 2.1.5 required
+                "mov-mode", HILDON_MOVEMENT_MODE_VERT, */
+                NULL);
+  /* Set the size request of the pannable area (it is automatically updated if
+   * the number of visible items in the status menu box changed)
+   */
+  gtk_widget_set_size_request (priv->pannable, 656, STATUS_MENU_ITEM_HEIGHT);
   gtk_widget_show (priv->pannable);
 
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
-
-  vbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (vbox);
+  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_widget_show (alignment);
 
   /* Pack containers */
   hildon_pannable_area_add_with_viewport (HILDON_PANNABLE_AREA (priv->pannable), priv->box); 
-  gtk_box_pack_start (GTK_BOX (hbox), priv->pannable, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (status_menu), vbox);
+  gtk_container_add (GTK_CONTAINER (alignment), priv->pannable);
+  gtk_container_add (GTK_CONTAINER (status_menu), alignment);
 
   /* Set border */
   /* gtk_container_set_border_width (GTK_CONTAINER (status_menu), STATUS_MENU_INNER_BORDER); */
@@ -278,25 +296,6 @@ hd_status_menu_realize (GtkWidget *widget)
                    (unsigned char *)&wm_type, 1);
 }
 
-#if 0
-static void
-hd_status_menu_size_request (GtkWidget      *widget,
-                             GtkRequisition *requisition)
-{
-  HDStatusMenuPrivate *priv;
-  /*  GdkScreen *screen; */
-  GtkRequisition child_requisition;
-
-  priv = HD_STATUS_MENU_GET_PRIVATE (widget);
-
-  gtk_widget_size_request (priv->table, &child_requisition);
-
-  /*  screen = gtk_widget_get_screen (widget);
-      requisition->width = gdk_screen_get_width (screen) - 2 * STATUS_MENU_EXTERNAL_BORDER;
-      requisition->height = MIN (gdk_screen_get_height (screen) - STATUS_MENU_EXTERNAL_BORDER, child_requisition.height + 2 * STATUS_MENU_INNER_BORDER);*/
-}
-#endif
-
 /* Grab transfer window (based on the one from GtkMenu) */
 static GdkWindow *
 grab_transfer_window_get (GtkWidget *widget)
@@ -408,10 +407,53 @@ hd_status_menu_button_release_event (GtkWidget      *widget,
 }
 
 static void
+hd_status_menu_check_resize (GtkContainer *container)
+{
+  GtkWindow *window = GTK_WINDOW (container);
+  GtkWidget *widget = GTK_WIDGET (container);
+
+  /* Handle a resize based on a configure notify event
+   *
+   * Assign size and position of the widget with a call to
+   * gtk_widget_size_allocate ().
+   */
+  if (window->configure_notify_received)
+    { 
+      GtkAllocation allocation;
+
+      window->configure_notify_received = FALSE;
+
+      /* gtk_window_configure_event() filled in widget->allocation */
+      allocation = widget->allocation;
+      gtk_widget_size_allocate (widget, &allocation);
+
+      gdk_window_process_updates (widget->window, TRUE);
+      
+      gdk_window_configure_finished (widget->window);
+
+      return;
+    }
+
+  /* Handle a resize based on a change in size request */
+  if (GTK_WIDGET_VISIBLE (container))
+    {
+      GtkRequisition req;
+
+      gtk_widget_size_request (widget, &req);
+
+      /* Request the window manager to resize the window to
+       * the required size (will result in a configure notify event
+       * see above) */
+      gdk_window_resize (widget->window, req.width, req.height);
+    }
+}
+
+static void
 hd_status_menu_class_init (HDStatusMenuClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
   object_class->dispose = hd_status_menu_dispose;
   object_class->set_property = hd_status_menu_set_property;
@@ -420,7 +462,8 @@ hd_status_menu_class_init (HDStatusMenuClass *klass)
   widget_class->map = hd_status_menu_map;
   widget_class->unmap = hd_status_menu_unmap;
   widget_class->button_release_event = hd_status_menu_button_release_event;
-  /*  widget_class->size_request = hd_status_menu_size_request; */
+
+  container_class->check_resize = hd_status_menu_check_resize;
 
   g_object_class_install_property (object_class,
                                    PROP_PLUGIN_MANAGER,
