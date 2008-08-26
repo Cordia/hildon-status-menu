@@ -43,10 +43,6 @@
 #define SPECIAL_ICON_WIDTH 48
 
 /* Configuration file keys */
-#define HD_STATUS_AREA_KEYFILE_GROUP          "X-Status-Area"
-#define HD_STATUS_AREA_KEYFILE_SIGNAL_PLUGIN  "X-Signal-Plugin"
-#define HD_STATUS_AREA_KEYFILE_BATTERY_PLUGIN "X-Battery-Plugin"
-#define HD_STATUS_AREA_KEYFILE_CLOCK_PLUGIN   "X-Clock-Plugin"
 
 #define HD_STATUS_AREA_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_AREA, HDStatusAreaPrivate));
 
@@ -401,10 +397,53 @@ hd_status_area_realize (GtkWidget *widget)
 }
 
 static void
+hd_status_area_check_resize (GtkContainer *container)
+{
+  GtkWindow *window = GTK_WINDOW (container);
+  GtkWidget *widget = GTK_WIDGET (container);
+
+  /* Handle a resize based on a configure notify event
+   *
+   * Assign size and position of the widget with a call to
+   * gtk_widget_size_allocate ().
+   */
+  if (window->configure_notify_received)
+    { 
+      GtkAllocation allocation;
+
+      window->configure_notify_received = FALSE;
+
+      /* gtk_window_configure_event() filled in widget->allocation */
+      allocation = widget->allocation;
+      gtk_widget_size_allocate (widget, &allocation);
+
+      gdk_window_process_updates (widget->window, TRUE);
+      
+      gdk_window_configure_finished (widget->window);
+
+      return;
+    }
+
+  /* Handle a resize based on a change in size request */
+  if (GTK_WIDGET_VISIBLE (container))
+    {
+      GtkRequisition req;
+
+      gtk_widget_size_request (widget, &req);
+
+      /* Request the window manager to resize the window to
+       * the required size (will result in a configure notify event
+       * see above) */
+      gdk_window_resize (widget->window, req.width, req.height);
+    }
+}
+
+static void
 hd_status_area_class_init (HDStatusAreaClass *klass)
 {
   GObjectClass* object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass* widget_class = GTK_WIDGET_CLASS (klass);
+  GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
   quark_hd_status_area_image = g_quark_from_static_string (hd_status_area_image);
 
@@ -414,6 +453,8 @@ hd_status_area_class_init (HDStatusAreaClass *klass)
   object_class->set_property = hd_status_area_set_property;
 
   widget_class->realize = hd_status_area_realize;
+
+  container_class->check_resize = hd_status_area_check_resize;
 
   g_object_class_install_property (object_class,
                                    PROP_PLUGIN_MANAGER,

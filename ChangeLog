@@ -1,3 +1,10 @@
+2008-08-26  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-area.c (hd_status_area_check_resize): Resize the
+	window to the requested size.
+	  (hd_status_area_class_init): Override
+	  GtkContainerClass::check_resize function.
+
 2008-08-22  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Update required libhildondesktop version.
