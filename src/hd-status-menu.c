@@ -37,6 +37,7 @@
 
 #include "hd-status-menu.h"
 #include "hd-status-menu-box.h"
+#include "hd-status-menu-config.h"
 
 /**
  * SECTION:hdstatusmenu
@@ -51,13 +52,13 @@
  *
  **/
 
-
 /* FIXME Use the pixel sizes from the layout guide  */
 #define STATUS_MENU_INNER_BORDER 4
 #define STATUS_MENU_EXTERNAL_BORDER 40
 
 #define STATUS_MENU_ITEM_HEIGHT 70 /* Master Layout Guide */
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
+#define STATUS_MENU_PANNABLE_WIDTH 656
 
 enum
 {
@@ -92,7 +93,7 @@ notify_visible_items_cb (GObject      *object,
                 NULL);
 
   gtk_widget_set_size_request (priv->pannable,
-                               656,
+                               STATUS_MENU_PANNABLE_WIDTH,
                                MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
 }
 
@@ -121,7 +122,9 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   /* Set the size request of the pannable area (it is automatically updated if
    * the number of visible items in the status menu box changed)
    */
-  gtk_widget_set_size_request (priv->pannable, 656, STATUS_MENU_ITEM_HEIGHT);
+  gtk_widget_set_size_request (priv->pannable,
+                               STATUS_MENU_PANNABLE_WIDTH,
+                               STATUS_MENU_ITEM_HEIGHT);
   gtk_widget_show (priv->pannable);
 
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
@@ -173,10 +176,11 @@ hd_status_menu_plugin_added_cb (HDPluginManager *plugin_manager,
 
   position = (guint) g_key_file_get_integer (keyfile,
                                              plugin_id,
-                                             "X-Status-Menu-Position",
+                                             HD_STATUS_MENU_CONFIG_KEY_POSITION,
                                              &error);
   g_free (plugin_id);
 
+  /* Use G_MAXUINT as default position */
   if (error)
     {
       g_error_free (error);
@@ -214,18 +218,21 @@ update_position (GtkWidget *child,
 
   plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (child));
 
+  /* Get the position from the plugin configuration file */
   position = (guint) g_key_file_get_integer (keyfile,
                                              plugin_id,
-                                             "X-Status-Menu-Position",
+                                             HD_STATUS_MENU_CONFIG_KEY_POSITION,
                                              &error);
   g_free (plugin_id);
 
+  /* Use G_MAXUINT as default */
   if (error)
     {
       g_error_free (error);
       position = G_MAXUINT;
     }
 
+  /* Reorder Child */
   hd_status_menu_box_reorder_child (HD_STATUS_MENU_BOX (gtk_widget_get_parent (child)),
                                     child,
                                     position);
@@ -283,7 +290,7 @@ hd_status_menu_realize (GtkWidget *widget)
   /* Use only a border as decoration */
   gdk_window_set_decorations (widget->window, GDK_DECOR_BORDER);
 
-  /* Set the _NET_WM_WINDOW_TYPE property to _HILDON_WM_WINDOW_TYPE_STATUS_AREA */
+  /* Set the _NET_WM_WINDOW_TYPE property to _HILDON_WM_WINDOW_TYPE_STATUS_MENU */
   display = gdk_drawable_get_display (widget->window);
   atom = gdk_x11_get_xatom_by_name_for_display (display,
                                                 "_NET_WM_WINDOW_TYPE");

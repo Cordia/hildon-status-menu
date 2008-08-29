@@ -1,3 +1,18 @@
+2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-menu-config.h: Add definitions for config file keys.
+
+	* src/hd-status-area.c (hd_status_area_plugin_added_cb): Use config
+	file key definitions.
+
+	* src/hd-status-menu.c: Update comments.
+	  (hd_status_menu_plugin_added_cb, update_position): Use config file
+	  key defintions.
+
+	* src/hildon-status-menu.c (load_priority_func): Use config
+	file key definitions.
+
+
 2008-08-26  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Update hildon-1 dependency.

@@ -30,8 +30,9 @@
 
 #include <string.h>
 
-#include "hd-status-menu.h"
 #include "hd-status-area-box.h"
+#include "hd-status-menu.h"
+#include "hd-status-menu-config.h"
 
 #include "hd-status-area.h"
 
@@ -241,11 +242,11 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
    */
   permanent_item = g_key_file_get_string (keyfile,
                                           plugin_id,
-                                          "X-Status-Area-Permanent-Item",
+                                          HD_STATUS_AREA_CONFIG_KEY_PERMANENT_ITEM,
                                           NULL);
 
-  /* Check if plugin is the special clock plugin */
-  if (permanent_item && strcmp ("Clock", permanent_item) == 0)
+  /* Check if plugin is the special permanent clock plugin */
+  if (permanent_item && strcmp (HD_STATUS_AREA_CONFIG_VALUE_CLOCK, permanent_item) == 0)
     {
       GtkWidget *clock_widget;
 
@@ -261,13 +262,13 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
       return;
     }
 
-  /* Check if plugin is the special battery or signal item */
-  if (permanent_item && strcmp ("Signal", permanent_item) == 0)
+  /* Check if plugin is the special permanent battery or signal item */
+  if (permanent_item && strcmp (HD_STATUS_AREA_CONFIG_VALUE_SIGNAL, permanent_item) == 0)
     {
       image = priv->signal_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
     }
-  else if (permanent_item && strcmp ("Battery", permanent_item) == 0)
+  else if (permanent_item && strcmp (HD_STATUS_AREA_CONFIG_VALUE_BATTERY, permanent_item) == 0)
     {
       image = priv->battery_image;
       g_object_set_qdata (plugin, quark_hd_status_area_image, image);
@@ -285,7 +286,7 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
       /* Get position */
       position = (guint) g_key_file_get_integer (keyfile,
                                                  plugin_id,
-                                                 "X-Status-Area-Position",
+                                                 HD_STATUS_AREA_CONFIG_KEY_POSITION,
                                                  &error);
       if (error)
         {

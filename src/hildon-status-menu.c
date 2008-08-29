@@ -37,18 +37,10 @@
 
 #include "hd-status-area.h"
 #include "hd-status-menu.h"
+#include "hd-status-menu-config.h"
 
 #define HD_STAMP_DIR   "/tmp/osso-appl-states/hildon-desktop/"
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
-
-#if 0
-static void
-show_button_clicked_cb (GtkButton    *button,
-                        HDStatusMenu *status_menu)
-{
-  gtk_widget_show (GTK_WIDGET (status_menu));
-}
-#endif
 
 /* signal handler, hildon-desktop sends SIGTERM to all tracked applications
  * when it receives SIGTEM itselgf */
@@ -84,7 +76,7 @@ load_priority_func (const gchar *plugin_id,
    * battery) should be loaded first (priority == 0) */
   if (g_key_file_has_key (keyfile,
                           plugin_id,
-                          "X-Status-Area-Permanent-Item",
+                          HD_STATUS_AREA_CONFIG_KEY_PERMANENT_ITEM,
                           NULL))
     return 0;
 
@@ -92,7 +84,7 @@ load_priority_func (const gchar *plugin_id,
    * position in the status area. */
   priority = (guint) g_key_file_get_integer (keyfile,
                                              plugin_id,
-                                             "X-Status-Area-Position",
+                                             HD_STATUS_AREA_CONFIG_KEY_POSITION,
                                              &error);
   if (error == NULL)
     return priority;
@@ -116,22 +108,13 @@ load_plugins_idle (gpointer data)
 int
 main (int argc, char **argv)
 {
-/*  GtkWidget *status_menu; */
   GtkWidget *status_area;
   HDConfigFile *config_file;
   HDPluginManager *plugin_manager;
   gchar *user_config_dir;
-/*  GtkWidget *window, *button;
-  HildonProgram *program;*/
 
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
-
-  /* FIXME: No translations required (yet)
-  bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-  textdomain (GETTEXT_PACKAGE);
-  */
 
   gtk_init (&argc, &argv);
 
@@ -145,9 +128,7 @@ main (int argc, char **argv)
                                       NULL);
   g_debug ("User config dir: %s", user_config_dir);
 
-  /* Create a config file for the plugin manager
-   *
-   */
+  /* Create a config file object for the plugin manager */
   config_file = hd_config_file_new (HD_DESKTOP_CONFIG_PATH,
                                     user_config_dir,
                                     "status-menu.conf");
@@ -168,8 +149,10 @@ main (int argc, char **argv)
   /* Show Status Area */
   gtk_widget_show (status_area);
 
+  /* Load Plugins when idle */
   gdk_threads_add_idle (load_plugins_idle, plugin_manager);
 
+  /* Start the main loop */
   gtk_main ();
 
   return 0;
