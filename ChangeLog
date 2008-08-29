@@ -1,5 +1,9 @@
 2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-menu-config.h: Fix defintions.
+
+2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-menu-config.h: Add definitions for config file keys.
 
 	* src/hd-status-area.c (hd_status_area_plugin_added_cb): Use config
