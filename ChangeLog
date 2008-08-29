@@ -1,5 +1,15 @@
 2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-area-box.c (hd_status_area_box_reorder_child): Queue
+	resize if children is visible.
+
+	* src/hd-status-area.c (hd_status_area_check_resize): Fix resize if
+	there is no configure notify event triggered.
+	* src/hd-status-menu.c (hd_status_menu_check_resize): Fix resize if
+	there is no configure notify event triggered.
+
+2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-menu-config.h: Fix defintions.
 
 2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>

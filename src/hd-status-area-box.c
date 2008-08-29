@@ -195,7 +195,6 @@ hd_status_area_box_size_allocate (GtkWidget     *widget,
       gtk_widget_size_allocate (info->widget, &child_allocation);
       gtk_widget_set_child_visible (info->widget, TRUE);
 
-
       visible_children++;
     }
 
@@ -342,6 +341,9 @@ hd_status_area_box_reorder_child (HDStatusAreaBox *box,
               priv->children = g_list_insert_sorted (priv->children,
                                                      info,
                                                      hd_status_area_box_cmp_priority);
+              
+              if (GTK_WIDGET_VISIBLE (child) && GTK_WIDGET_VISIBLE (box))
+                gtk_widget_queue_resize (child);
             }
 
           break;

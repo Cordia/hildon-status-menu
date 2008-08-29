@@ -436,6 +436,10 @@ hd_status_area_check_resize (GtkContainer *container)
        * the required size (will result in a configure notify event
        * see above) */
       gdk_window_resize (widget->window, req.width, req.height);
+
+      /* Resize children (also if size not changed and so no
+       * configure notify event is triggered) */
+      gtk_container_resize_children (GTK_CONTAINER (widget));
     }
 }
 
