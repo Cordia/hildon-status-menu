@@ -1,5 +1,12 @@
 2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-area.c (hd_status_area_plugin_added_cb): Store plugin
+	  ID in image widget.
+	  (update_position): Use the plugin ID. Fix image widget is no plugin
+	  item bug.
+
+2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-area.c (update_position,
 	  hd_status_area_plugin_configuration_loaded_cb): Update positions if
 	  plugin configuration changed.

@@ -47,8 +47,11 @@
 
 #define HD_STATUS_AREA_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_AREA, HDStatusAreaPrivate));
 
-static GQuark      quark_hd_status_area_image  = 0;
+static GQuark      quark_hd_status_area_image = 0;
 static const gchar hd_status_area_image[] = "hd_status_area_image";
+
+static GQuark      quark_hd_status_area_plugin_id = 0;
+static const gchar hd_status_area_plugin_id[] = "hd_status_area_plugin_id";
 
 enum
 {
@@ -282,6 +285,8 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
       image = gtk_image_new ();
       g_object_set_qdata_full (plugin, quark_hd_status_area_image,
                                image, (GDestroyNotify) gtk_widget_destroy);
+      g_object_set_qdata_full (G_OBJECT (image), quark_hd_status_area_plugin_id,
+                               g_strdup (plugin_id), (GDestroyNotify) g_free);
 
       /* Get position */
       position = (guint) g_key_file_get_integer (keyfile,
@@ -343,14 +348,13 @@ update_position (GtkWidget *child,
   guint position;
   GError *error = NULL;
 
-  plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (child));
+  plugin_id = g_object_get_qdata (G_OBJECT (child), quark_hd_status_area_plugin_id);
 
   /* Get the position from the plugin configuration file */
   position = (guint) g_key_file_get_integer (keyfile,
                                              plugin_id,
                                              HD_STATUS_AREA_CONFIG_KEY_POSITION,
                                              &error);
-  g_free (plugin_id);
 
   /* Use G_MAXUINT as default */
   if (error)
@@ -484,6 +488,7 @@ hd_status_area_class_init (HDStatusAreaClass *klass)
   GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
 
   quark_hd_status_area_image = g_quark_from_static_string (hd_status_area_image);
+  quark_hd_status_area_plugin_id = g_quark_from_static_string (hd_status_area_plugin_id);
 
   object_class->constructor = hd_status_area_constructor;
   object_class->dispose = hd_status_area_dispose;
