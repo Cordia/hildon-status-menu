@@ -1,5 +1,11 @@
 2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-area.c (update_position,
+	  hd_status_area_plugin_configuration_loaded_cb): Update positions if
+	  plugin configuration changed.
+
+2008-08-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-area-box.c (hd_status_area_box_reorder_child): Queue
 	resize if children is visible.
 

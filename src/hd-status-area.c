@@ -336,10 +336,43 @@ hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
 }
 
 static void
+update_position (GtkWidget *child,
+                 GKeyFile  *keyfile)
+{
+  gchar *plugin_id;
+  guint position;
+  GError *error = NULL;
+
+  plugin_id = hd_plugin_item_get_plugin_id (HD_PLUGIN_ITEM (child));
+
+  /* Get the position from the plugin configuration file */
+  position = (guint) g_key_file_get_integer (keyfile,
+                                             plugin_id,
+                                             HD_STATUS_AREA_CONFIG_KEY_POSITION,
+                                             &error);
+  g_free (plugin_id);
+
+  /* Use G_MAXUINT as default */
+  if (error)
+    {
+      g_error_free (error);
+      position = G_MAXUINT;
+    }
+
+  /* Reorder Child */
+  hd_status_area_box_reorder_child (HD_STATUS_AREA_BOX (gtk_widget_get_parent (child)),
+                                    child,
+                                    position);
+}
+
+static void
 hd_status_area_plugin_configuration_loaded_cb (HDPluginManager *plugin_manager,
-                                               GKeyFile        *keyfile,
+                                               GKeyFile        *key_file,
                                                HDStatusArea    *status_area)
 {
+  HDStatusAreaPrivate *priv = status_area->priv;
+
+  gtk_container_foreach (GTK_CONTAINER (priv->icon_box), (GtkCallback) update_position, key_file);
 }
 
 static void
