@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.1~unreleased) unstable; urgency=low
+
+  * Unreleased...
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed,  3 Sep 2008 20:02:35 +0300
+
 hildon-status-menu (0.3.0) unstable; urgency=low
 
   * Window property for better placement by the WM.
