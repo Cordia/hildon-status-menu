@@ -1,5 +1,10 @@
 2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* debian/hildon-status-menu.init:
+	* debian/rules (CFLAGS): Add startuo script for hildon-status-menu.
+
+2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hildon-status-menu.c (HD_STAMP_DIR): Use a stampdir which is
 	writable by user.
 
