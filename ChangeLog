@@ -1,3 +1,8 @@
+2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hildon-status-menu.c (HD_STAMP_DIR): Use a stampdir which is
+	writable by user.
+
 2008-09-15  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Require libhildondesktop >= 2.1.4

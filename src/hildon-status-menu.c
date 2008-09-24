@@ -38,7 +38,7 @@
 #include "hd-status-menu.h"
 #include "hd-status-menu-config.h"
 
-#define HD_STAMP_DIR   "/tmp/osso-appl-states/hildon-desktop/"
+#define HD_STAMP_DIR   "/tmp/hildon-desktop/"
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
 
 /* signal handler, hildon-desktop sends SIGTERM to all tracked applications
