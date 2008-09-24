@@ -1,8 +1,9 @@
-hildon-status-menu (0.3.1~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.1) unstable; urgency=low
 
-  * Unreleased...
+  * Fixed stamp file (safe mode) support.
+  * Added start script for the Status Menu.
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed,  3 Sep 2008 20:02:35 +0300
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed, 24 Sep 2008 16:23:37 +0200
 
 hildon-status-menu (0.3.0) unstable; urgency=low
 

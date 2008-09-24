@@ -1,7 +1,14 @@
 2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* configure.ac: Update version to 0.3.1.
+	* debian/changelog: Added Release notes for 0.3.1 Release.
+	* debian/control: Increase required version of libhildondesktop1-dev
+	to 2.1.4.
+
+2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* debian/hildon-status-menu.init:
-	* debian/rules (CFLAGS): Add startuo script for hildon-status-menu.
+	* debian/rules (CFLAGS): Add startup script for hildon-status-menu.
 
 2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
 
