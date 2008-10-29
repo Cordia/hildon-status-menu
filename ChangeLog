@@ -1,3 +1,11 @@
+2008-10-29  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* configure.ac: Update version to 0.3.2. Update required
+	libhildondesktop1 version to 2.1.6.
+
+	* src/hildon-status-menu.c (main): Don't unref the HDconfigFile
+	instance.
+
 2008-09-24  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Update version to 0.3.1.

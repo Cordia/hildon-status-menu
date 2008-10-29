@@ -126,7 +126,6 @@ main (int argc, char **argv)
                                     user_config_dir,
                                     "status-menu.conf");
   plugin_manager = hd_plugin_manager_new (config_file);
-  g_object_unref (config_file);
   g_free (user_config_dir);
 
   /* Set the load priority function */
