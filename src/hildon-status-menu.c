@@ -99,9 +99,7 @@ int
 main (int argc, char **argv)
 {
   GtkWidget *status_area;
-  HDConfigFile *config_file;
   HDPluginManager *plugin_manager;
-  gchar *user_config_dir;
 
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
@@ -115,18 +113,9 @@ main (int argc, char **argv)
   /* Setup Stamp File */
   hd_stamp_file_init (HD_STATUS_MENU_STAMP_FILE);
 
-  /* User configuration directory (~/) */
-  user_config_dir = g_build_filename (g_get_user_config_dir (),
-                                      "hildon-desktop",
-                                      NULL);
-  g_debug ("User config dir: %s", user_config_dir);
-
-  /* Create a config file object for the plugin manager */
-  config_file = hd_config_file_new (HD_DESKTOP_CONFIG_PATH,
-                                    user_config_dir,
-                                    "status-menu.conf");
-  plugin_manager = hd_plugin_manager_new (config_file);
-  g_free (user_config_dir);
+  /* Create a plugin manager instance */
+  plugin_manager = hd_plugin_manager_new (
+                     hd_config_file_new_with_defaults ("status-menu.conf"));
 
   /* Set the load priority function */
   hd_plugin_manager_set_load_priority_func (plugin_manager,

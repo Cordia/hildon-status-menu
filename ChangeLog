@@ -1,3 +1,22 @@
+2008-10-30  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* debian/changelog: Prepare 0.3.2 release.
+
+	* debian/control: Updatre required libhildondesktop1-dev version.
+
+	* src/hd-status-area.c (hd_status_area_items_configuration_loaded_cb,
+	  hd_status_area_set_property): Update to changed libhildondesktop
+	  API.
+
+	* src/hd-status-menu.c (hd_status_menu_items_configuration_loaded_cb,
+	  hd_status_menu_set_property): Update to changed libhildondesktop
+	  API.
+
+	* src/hildon-status-menu.c (main): Use new simple HDConfigFile API.
+
+	* src/status-menu.plugins.in: Use the real clock plugin instead of the
+	example.
+
 2008-10-29  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Update version to 0.3.2. Update required

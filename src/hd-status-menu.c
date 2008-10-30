@@ -239,7 +239,7 @@ update_position (GtkWidget *child,
 }
 
 static void
-hd_status_menu_plugin_configuration_loaded_cb (HDPluginManager *plugin_manager,
+hd_status_menu_items_configuration_loaded_cb (HDPluginManager *plugin_manager,
                                                GKeyFile        *key_file,
                                                HDStatusMenu    *status_menu)
 {
@@ -267,8 +267,8 @@ hd_status_menu_set_property (GObject      *object,
                                    G_CALLBACK (hd_status_menu_plugin_added_cb), object, 0);
           g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-removed",
                                    G_CALLBACK (hd_status_menu_plugin_removed_cb), object, 0);
-          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "plugin-configuration-loaded",
-                                   G_CALLBACK (hd_status_menu_plugin_configuration_loaded_cb), object, 0);
+          g_signal_connect_object (G_OBJECT (priv->plugin_manager), "items-configuration-loaded",
+                                   G_CALLBACK (hd_status_menu_items_configuration_loaded_cb), object, 0);
         }
       else
         g_warning ("plugin-manager should not be NULL");

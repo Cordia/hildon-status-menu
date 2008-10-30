@@ -1,5 +1,5 @@
-[example-clock.desktop]
-X-Desktop-File=@hildonstatusmenudesktopentrydir@/example-clock.desktop
+[clock-plugin.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/clock-plugin.desktop
 X-Status-Area-Permanent-Item=Clock
 X-Status-Menu-Position=1
 
