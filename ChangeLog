@@ -1,5 +1,14 @@
 2008-10-31  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* debian/compat: Add compat file.
+
+	* debian/conffiles: Add conffiles (fix lintian issues).
+
+	* debian/control: Fix lintian issues.
+	* debian/rules: Fix lintian issues.
+
+2008-10-31  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* debian/changelog: Release 0.3.2
 
 	* debian/control: Update requirements.

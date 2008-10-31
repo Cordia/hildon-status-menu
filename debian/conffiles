@@ -1,0 +1,3 @@
+/etc/hildon-desktop/status-menu.conf
+/etc/hildon-desktop/status-menu.plugins
+/etc/init.d/hildon-status-menu
