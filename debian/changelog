@@ -1,8 +1,8 @@
-hildon-status-menu (0.3.2~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.2) unstable; urgency=low
 
   * Update for libhildondesktop1 API changes.
 
- -- Jan Arne Petersen <jpetersen@openismus.com>  Thu, 30 Oct 2008 00:41:05 +0100
+ -- Jan Arne Petersen <jpetersen@openismus.com>  Fri, 31 Oct 2008 12:13:07 +0100
 
 hildon-status-menu (0.3.1) unstable; urgency=low
 
