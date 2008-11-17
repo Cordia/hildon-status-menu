@@ -1,8 +1,8 @@
-hildon-status-menu (0.3.3~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.3) unstable; urgency=low
 
   * Added startup script to Xsession.post
 
- -- Jan Arne Petersen <jpetersen@openismus.com>  Fri, 14 Nov 2008 10:22:27 +0200
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 14 Nov 2008 16:28:01 +0200
 
 hildon-status-menu (0.3.2) unstable; urgency=low
 
