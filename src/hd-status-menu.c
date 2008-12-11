@@ -438,6 +438,11 @@ hd_status_menu_check_resize (GtkContainer *container)
       
       gdk_window_configure_finished (widget->window);
 
+      /* FIXME check if it is really sized the correct way
+       * (works with the hildon wm).
+       */
+      gtk_widget_queue_resize (widget);
+
       return;
     }
 

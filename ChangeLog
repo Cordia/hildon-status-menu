@@ -1,5 +1,10 @@
 2008-12-11  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-menu.c (hd_status_menu_check_resize): Also fix the
+	status menu.
+
+2008-12-11  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hd-status-area.c (status_area_icon_changed,
 	  hd_status_area_check_resize): Add debug messages. Fix resize.
 
