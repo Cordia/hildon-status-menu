@@ -208,6 +208,10 @@ status_area_icon_changed (HDStatusPluginItem *plugin)
                 NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
 
+  g_debug ("status_area_icon_changed. plugin: %s, icon %x",
+           hd_status_plugin_item_get_dl_filename (plugin),
+           (guint) pixbuf);
+
   /* Hide image if icon is not set */
   if (pixbuf)
     {
@@ -455,9 +459,16 @@ hd_status_area_check_resize (GtkContainer *container)
       allocation = widget->allocation;
       gtk_widget_size_allocate (widget, &allocation);
 
+      g_debug ("%s, configure-notify (%d, %d)", __FUNCTION__, allocation.width, allocation.height);
+
       gdk_window_process_updates (widget->window, TRUE);
       
       gdk_window_configure_finished (widget->window);
+
+      /* FIXME check if it is really sized the correct way
+       * (works with the hildon wm).
+       */
+      gtk_widget_queue_resize (widget);
 
       return;
     }
@@ -468,6 +479,8 @@ hd_status_area_check_resize (GtkContainer *container)
       GtkRequisition req;
 
       gtk_widget_size_request (widget, &req);
+
+      g_debug ("%s, size-request (%d, %d)", __FUNCTION__, req.width, req.height);
 
       /* Request the window manager to resize the window to
        * the required size (will result in a configure notify event
