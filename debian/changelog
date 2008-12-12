@@ -1,3 +1,10 @@
+hildon-status-menu (0.3.5~unreleased) unstable; urgency=low
+
+  * Fixed window sizing.
+  * Removed .desktop file.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 12 Dec 2008 12:37:03 +0100
+
 hildon-status-menu (0.3.4) unstable; urgency=low
 
   * Add autogen.sh run to create the configure script.

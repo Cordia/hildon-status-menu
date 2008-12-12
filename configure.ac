@@ -1,4 +1,4 @@
-AC_INIT([hildon-status-menu], [0.3.2])
+AC_INIT([hildon-status-menu], [0.3.5])
 AC_CANONICAL_SYSTEM
 
 AM_CONFIG_HEADER(config.h)
@@ -99,7 +99,6 @@ AC_SUBST(hildondesktoplibdir)
 
 AC_OUTPUT([
 Makefile
-hildon-status-menu.desktop
 src/status-menu.conf
 src/status-menu.plugins
 src/Makefile

@@ -1,7 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Version=1.0
-Type=Application
-Name=Hildon Status Menu
-Comment=Hildon Status Menu test application
-Exec=@prefix@/bin/hildon-status-menu
