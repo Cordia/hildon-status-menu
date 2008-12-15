@@ -1,3 +1,10 @@
+2008-12-15  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-area.c (hd_status_area_init, hd_status_area_dispose,
+	  hd_status_area_set_property, hd_status_area_expose_event,
+	  hd_status_area_class_init): Use the titlebar image as background for
+	  the staus area as xmas workaround.
+
 2008-12-12  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* configure.ac: Increase version.

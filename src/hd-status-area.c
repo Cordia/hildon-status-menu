@@ -43,6 +43,9 @@
 #define STATUS_AREA_ICON_HEIGHT 16
 #define SPECIAL_ICON_WIDTH 48
 
+/* xmas workaround */
+#define BG_IMAGE_FILE "/usr/share/themes/default/images/wmTitleBar.png"
+
 /* Configuration file keys */
 
 #define HD_STATUS_AREA_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_AREA, HDStatusAreaPrivate));
@@ -70,6 +73,8 @@ struct _HDStatusAreaPrivate
   GtkWidget *signal_image, *battery_image;
 
   GtkWidget *clock_box;
+
+  GdkPixbuf *bg_image;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -92,7 +97,7 @@ hd_status_area_init (HDStatusArea *status_area)
   HDStatusAreaPrivate *priv = HD_STATUS_AREA_GET_PRIVATE (status_area);
 
   /* UI Style guide */
-  GtkWidget *ebox, *alignment, *main_hbox, *left_vbox;
+  GtkWidget *alignment, *main_hbox, *left_vbox;
 
   GtkWidget *left_top_row, *left_hsep;
 
@@ -100,11 +105,11 @@ hd_status_area_init (HDStatusArea *status_area)
   status_area->priv = priv;
 
   /* Create Status area UI */
-  ebox = gtk_event_box_new ();
-  gtk_widget_add_events (GTK_WIDGET (ebox), GDK_BUTTON_RELEASE_MASK);
-  g_signal_connect (G_OBJECT (ebox), "button-release-event",
+  gtk_widget_add_events (GTK_WIDGET (status_area), GDK_BUTTON_RELEASE_MASK);
+  g_signal_connect (G_OBJECT (status_area), "button-release-event",
                     G_CALLBACK (button_release_event_cb), status_area);
-  gtk_widget_show (ebox);
+  gtk_widget_set_app_paintable (GTK_WIDGET (status_area), TRUE);
+  gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 4, 10, 10, 10);
@@ -140,8 +145,7 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_show (priv->icon_box);
 
   /* Pack widgets */
-  gtk_container_add (GTK_CONTAINER (status_area), ebox);
-  gtk_container_add (GTK_CONTAINER (ebox), alignment);
+  gtk_container_add (GTK_CONTAINER (status_area), alignment);
   gtk_container_add (GTK_CONTAINER (alignment), main_hbox);
   gtk_box_pack_start (GTK_BOX (main_hbox), left_vbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), priv->icon_box, TRUE, TRUE, 0);
@@ -151,6 +155,9 @@ hd_status_area_init (HDStatusArea *status_area)
 
   gtk_box_pack_start (GTK_BOX (left_top_row), priv->signal_image, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (left_top_row), priv->battery_image, FALSE, FALSE, 0);
+
+  /* xmas */
+  priv->bg_image = gdk_pixbuf_new_from_file (BG_IMAGE_FILE, NULL);
 }
 
 static GObject *
@@ -178,10 +185,10 @@ hd_status_area_dispose (GObject *object)
   HDStatusAreaPrivate *priv = HD_STATUS_AREA (object)->priv;
 
   if (priv->plugin_manager)
-    {
-      g_object_unref (priv->plugin_manager);
-      priv->plugin_manager = NULL;
-    }
+    priv->plugin_manager = (g_object_unref (priv->plugin_manager), NULL);
+
+  if (priv->bg_image)
+    priv->bg_image = (g_object_unref (priv->bg_image), NULL);
 
   G_OBJECT_CLASS (hd_status_area_parent_class)->dispose (object);
 }
@@ -414,6 +421,30 @@ hd_status_area_set_property (GObject      *object,
     }
 }
 
+static gboolean
+hd_status_area_expose_event (GtkWidget *widget,
+                             GdkEventExpose *event)
+{
+  HDStatusAreaPrivate *priv = HD_STATUS_AREA (widget)->priv;
+  cairo_t *cr;
+
+  cr = gdk_cairo_create (GDK_DRAWABLE (widget->window));
+  gdk_cairo_region (cr, event->region);
+  cairo_clip (cr);
+
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+  if (priv->bg_image)
+    gdk_cairo_set_source_pixbuf (cr, priv->bg_image, 0.0, 0.0);
+  else
+    cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+  cairo_paint (cr);
+
+  cairo_destroy (cr);
+
+  return GTK_WIDGET_CLASS (hd_status_area_parent_class)->expose_event (widget,
+                                                                       event);
+}
+
 static void
 hd_status_area_realize (GtkWidget *widget)
 {
@@ -509,6 +540,7 @@ hd_status_area_class_init (HDStatusAreaClass *klass)
   object_class->set_property = hd_status_area_set_property;
 
   widget_class->realize = hd_status_area_realize;
+  widget_class->expose_event = hd_status_area_expose_event;
 
   container_class->check_resize = hd_status_area_check_resize;
 
