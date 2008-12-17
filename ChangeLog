@@ -1,3 +1,12 @@
+2008-12-17  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-area-box.c: 
+	* src/hd-status-area.c (hd_status_area_init,
+	  hd_status_area_plugin_added_cb): Update to new UI layout.
+
+	* src/status-menu.plugins.in: Add builtin plugins. Fixes NB#93199,
+	  NB#92616.
+
 2008-12-15  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.5

@@ -28,7 +28,7 @@
 /* UI Style guide */
 #define ITEM_HEIGHT 16
 #define ITEM_WIDTH 16
-#define SPACING 8
+#define SPACING 0
 #define MAX_VISIBLE_CHILDREN 8
 
 struct _HDStatusAreaBoxPrivate

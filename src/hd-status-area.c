@@ -23,6 +23,7 @@
 #include <config.h>
 #endif
 
+#include <hildon/hildon.h>
 #include <gdk/gdkx.h>
 
 #include <X11/X.h>
@@ -41,7 +42,10 @@
 #define MINIMUM_STATUS_AREA_WIDTH 112
 
 #define STATUS_AREA_ICON_HEIGHT 16
-#define SPECIAL_ICON_WIDTH 48
+#define SPECIAL_ICON_WIDTH 16
+#define SPECIAL_ICON_HEIGHT 32
+
+#define CUSTOM_MARGIN 22
 
 /* xmas workaround */
 #define BG_IMAGE_FILE "/usr/share/themes/default/images/wmTitleBar.png"
@@ -97,9 +101,9 @@ hd_status_area_init (HDStatusArea *status_area)
   HDStatusAreaPrivate *priv = HD_STATUS_AREA_GET_PRIVATE (status_area);
 
   /* UI Style guide */
-  GtkWidget *alignment, *main_hbox, *left_vbox;
+  GtkWidget *alignment, *main_hbox;
 
-  GtkWidget *left_top_row, *left_hsep;
+  GtkWidget *right_hbox;
 
   /* Set priv member */
   status_area->priv = priv;
@@ -112,33 +116,25 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 4, 10, 10, 10);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, CUSTOM_MARGIN, CUSTOM_MARGIN);
   gtk_widget_show (alignment);
 
-  main_hbox = gtk_hbox_new (FALSE, 8);
+  main_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_DOUBLE);
   gtk_widget_show (main_hbox);
 
-  left_vbox = gtk_vbox_new (FALSE, 0);  
-  gtk_widget_show (left_vbox);
+  right_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_HALF);
+  gtk_widget_show (right_hbox);
 
-  left_top_row = gtk_hbox_new (TRUE, 0);
-  gtk_widget_set_size_request (left_top_row, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT);
-  gtk_widget_show (left_top_row);
-
-  left_hsep = gtk_hseparator_new ();
-  gtk_widget_set_size_request (left_hsep, -1, 8);
-  gtk_widget_show (left_hsep);
-
-  priv->clock_box = gtk_hbox_new (FALSE, 0);
-  gtk_widget_set_size_request (priv->clock_box, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT);
+  priv->clock_box = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+/*  gtk_widget_set_size_request (priv->clock_box, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT); */
   gtk_widget_show (priv->clock_box);
 
   priv->signal_image = gtk_image_new ();
-  gtk_widget_set_size_request (priv->signal_image, SPECIAL_ICON_WIDTH, STATUS_AREA_ICON_HEIGHT);
+  gtk_widget_set_size_request (priv->signal_image, SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT);
   gtk_widget_show (priv->signal_image);
 
   priv->battery_image = gtk_image_new ();
-  gtk_widget_set_size_request (priv->battery_image, SPECIAL_ICON_WIDTH, STATUS_AREA_ICON_HEIGHT);
+  gtk_widget_set_size_request (priv->battery_image, SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT);
   gtk_widget_show (priv->battery_image);
 
   priv->icon_box = hd_status_area_box_new ();
@@ -147,14 +143,11 @@ hd_status_area_init (HDStatusArea *status_area)
   /* Pack widgets */
   gtk_container_add (GTK_CONTAINER (status_area), alignment);
   gtk_container_add (GTK_CONTAINER (alignment), main_hbox);
-  gtk_box_pack_start (GTK_BOX (main_hbox), left_vbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (main_hbox), priv->icon_box, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (left_vbox), left_top_row, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (left_vbox), left_hsep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (left_vbox), priv->clock_box, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (left_top_row), priv->signal_image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (left_top_row), priv->battery_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_hbox), priv->clock_box, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_hbox), right_hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (right_hbox), priv->signal_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (right_hbox), priv->battery_image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (right_hbox), priv->icon_box, TRUE, TRUE, 0);
 
   /* xmas */
   priv->bg_image = gdk_pixbuf_new_from_file (BG_IMAGE_FILE, NULL);
@@ -268,7 +261,7 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
                     "status-area-widget", &clock_widget,
                     NULL);
 
-      gtk_box_pack_start (GTK_BOX (priv->clock_box), clock_widget, FALSE, FALSE, 0);
+      gtk_container_add (GTK_CONTAINER (priv->clock_box), clock_widget);
 
       g_object_unref (clock_widget);
 
