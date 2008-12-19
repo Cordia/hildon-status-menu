@@ -104,10 +104,16 @@ main (int argc, char **argv)
   g_thread_init (NULL);
   setlocale (LC_ALL, "");
 
+  /* Initialize Gtk+ */
   gtk_init (&argc, &argv);
 
+  /* Initialize Hildon */
+  hildon_init ();
+
+  /* Initialize GnomeVFS */
   gnome_vfs_init ();
 
+  /* Add handler for TERM signal */
   signal (SIGTERM, signal_handler);
 
   /* Setup Stamp File */
