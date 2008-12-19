@@ -74,7 +74,7 @@ struct _HDStatusAreaPrivate
 
   GtkWidget *icon_box;
 
-  GtkWidget *signal_image, *battery_image;
+  GtkWidget **special_item_image;
 
   GtkWidget *clock_box;
 
@@ -99,11 +99,8 @@ static void
 hd_status_area_init (HDStatusArea *status_area)
 {
   HDStatusAreaPrivate *priv = HD_STATUS_AREA_GET_PRIVATE (status_area);
-
-  /* UI Style guide */
-  GtkWidget *alignment, *main_hbox;
-
-  GtkWidget *right_hbox;
+  GtkWidget *alignment, *main_hbox, *right_hbox;
+  guint i;
 
   /* Set priv member */
   status_area->priv = priv;
@@ -129,13 +126,13 @@ hd_status_area_init (HDStatusArea *status_area)
 /*  gtk_widget_set_size_request (priv->clock_box, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT); */
   gtk_widget_show (priv->clock_box);
 
-  priv->signal_image = gtk_image_new ();
-  gtk_widget_set_size_request (priv->signal_image, SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT);
-  gtk_widget_show (priv->signal_image);
-
-  priv->battery_image = gtk_image_new ();
-  gtk_widget_set_size_request (priv->battery_image, SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT);
-  gtk_widget_show (priv->battery_image);
+  priv->special_item_image = g_new0 (GtkWidget*, HD_STATUS_AREA_NUM_SPECIAL_ITEMS);
+  for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
+    {
+      priv->special_item_image[i] = gtk_image_new ();
+      gtk_widget_set_size_request (priv->special_item_image[i], SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT);
+      gtk_widget_show (priv->special_item_image[i]);
+    }
 
   priv->icon_box = hd_status_area_box_new ();
   gtk_widget_show (priv->icon_box);
@@ -145,8 +142,8 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_container_add (GTK_CONTAINER (alignment), main_hbox);
   gtk_box_pack_start (GTK_BOX (main_hbox), priv->clock_box, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), right_hbox, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (right_hbox), priv->signal_image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (right_hbox), priv->battery_image, FALSE, FALSE, 0);
+  for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
+    gtk_box_pack_start (GTK_BOX (right_hbox), priv->special_item_image[i], FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (right_hbox), priv->icon_box, TRUE, TRUE, 0);
 
   /* xmas */
@@ -230,9 +227,10 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
 {
   HDStatusAreaPrivate *priv = status_area->priv;
   gchar *plugin_id;
-  GtkWidget *image;
+  GtkWidget *image = NULL;
   GKeyFile *keyfile;
   gchar *permanent_item;
+  guint i;
 
   /* Plugin must be a HDStatusMenuItem */
   if (!HD_IS_STATUS_PLUGIN_ITEM (plugin))
@@ -269,18 +267,24 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
       return;
     }
 
-  /* Check if plugin is the special permanent battery or signal item */
-  if (permanent_item && strcmp (HD_STATUS_AREA_CONFIG_VALUE_SIGNAL, permanent_item) == 0)
+  /* Check if plugin is the special permanent item */
+  for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
     {
-      image = priv->signal_image;
-      g_object_set_qdata (plugin, quark_hd_status_area_image, image);
+      gchar *value = g_strdup_printf (HD_STATUS_AREA_CONFIG_VALUE_SPECIAL_ITEM, i);
+
+      if (permanent_item && strcmp (value, permanent_item) == 0)
+        {
+          image = priv->special_item_image [i];
+          g_object_set_qdata (plugin, quark_hd_status_area_image, image);
+
+          g_free (value);
+          break;
+        }
+
+      g_free (value);
     }
-  else if (permanent_item && strcmp (HD_STATUS_AREA_CONFIG_VALUE_BATTERY, permanent_item) == 0)
-    {
-      image = priv->battery_image;
-      g_object_set_qdata (plugin, quark_hd_status_area_image, image);
-    }
-  else
+
+  if (!image)
     {
       guint position;
       GError *error = NULL;

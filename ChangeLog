@@ -1,5 +1,13 @@
 2008-12-19  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	* src/hd-status-area.c: Use generic names for special icons.
+
+	* src/hd-status-menu-config.h: Update config key/value defintions.
+
+	* src/status-menu.plugins.in: Update config file.
+
+2008-12-19  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	* src/hildon-status-menu.c (main): Intialize Hildon by calling
 	  hildon_ini().
 

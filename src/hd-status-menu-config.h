@@ -24,9 +24,10 @@
 
 #define HD_STATUS_AREA_CONFIG_KEY_POSITION       "X-Status-Area-Position"
 #define HD_STATUS_AREA_CONFIG_KEY_PERMANENT_ITEM "X-Status-Area-Permanent-Item"
-#define HD_STATUS_AREA_CONFIG_VALUE_BATTERY      "Battery"
 #define HD_STATUS_AREA_CONFIG_VALUE_CLOCK        "Clock"
-#define HD_STATUS_AREA_CONFIG_VALUE_SIGNAL       "Signal"
+#define HD_STATUS_AREA_CONFIG_VALUE_SPECIAL_ITEM "Special-Item-%u"
+
+#define HD_STATUS_AREA_NUM_SPECIAL_ITEMS         2
 
 #define HD_STATUS_MENU_CONFIG_KEY_POSITION       "X-Status-Menu-Position"
 

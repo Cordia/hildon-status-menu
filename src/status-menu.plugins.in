@@ -5,11 +5,11 @@ X-Status-Menu-Position=1
 
 [connui-cellular.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-cellular.desktop
-X-Status-Area-Permanent-Item=Signal
+X-Status-Area-Permanent-Item=Special-Item-0
 
 [status-area-applet-battery.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/status-area-applet-battery.desktop
-X-Status-Area-Permanent-Item=Battery
+X-Status-Area-Permanent-Item=Special-Item-1
 X-Status-Menu-Position=2
 
 [connui-internet.desktop]
