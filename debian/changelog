@@ -1,6 +1,17 @@
 hildon-status-menu (0.3.6~unreleased) unstable; urgency=low
 
-  * unreleased
+  Jan Arne Petersen  <jpetersen@openismus.com>:
+
+        * src/hd-status-area.c: Use generic names for special icons.
+        * src/hd-status-menu-config.h: Update config key/value defintions.
+        * src/status-menu.plugins.in: Update config file.
+        * src/hildon-status-menu.c (main): Intialize Hildon by calling
+          hildon_ini().
+        * src/hd-status-area-box.c: 
+        * src/hd-status-area.c (hd_status_area_init,
+          hd_status_area_plugin_added_cb): Update to new UI layout.
+        * src/status-menu.plugins.in: Add builtin plugins.
+          Fixes: NB#93199, NB#92616.
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 15 Dec 2008 15:54:23 +0200
 
