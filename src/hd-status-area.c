@@ -487,8 +487,6 @@ hd_status_area_check_resize (GtkContainer *container)
       allocation = widget->allocation;
       gtk_widget_size_allocate (widget, &allocation);
 
-      g_debug ("%s, configure-notify (%d, %d)", __FUNCTION__, allocation.width, allocation.height);
-
       gdk_window_process_updates (widget->window, TRUE);
       
       gdk_window_configure_finished (widget->window);
@@ -507,8 +505,6 @@ hd_status_area_check_resize (GtkContainer *container)
       GtkRequisition req;
 
       gtk_widget_size_request (widget, &req);
-
-      g_debug ("%s, size-request (%d, %d)", __FUNCTION__, req.width, req.height);
 
       /* Request the window manager to resize the window to
        * the required size (will result in a configure notify event
