@@ -1,4 +1,10 @@
-hildon-status-menu (0.3.6~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.7~unreleased) unstable; urgency=low
+
+  * unreleased
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 13 Jan 2009 14:05:06 +0200
+
+hildon-status-menu (0.3.6) unstable; urgency=low
 
   Jan Arne Petersen  <jpetersen@openismus.com>:
 
@@ -13,7 +19,7 @@ hildon-status-menu (0.3.6~unreleased) unstable; urgency=low
         * src/status-menu.plugins.in: Add builtin plugins.
           Fixes: NB#93199, NB#92616.
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 15 Dec 2008 15:54:23 +0200
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 13 Jan 2009 14:03:02 +0200
 
 hildon-status-menu (0.3.5) unstable; urgency=low
 
