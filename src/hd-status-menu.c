@@ -116,8 +116,7 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   g_object_set (G_OBJECT (priv->pannable),
                 "hscrollbar-policy", GTK_POLICY_NEVER,
                 "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
-/* FIXME: unreleased hildon-1 >= 2.1.5 required
-                "mov-mode", HILDON_MOVEMENT_MODE_VERT, */
+                "mov-mode", HILDON_MOVEMENT_MODE_VERT,
                 NULL);
   /* Set the size request of the pannable area (it is automatically updated if
    * the number of visible items in the status menu box changed)
@@ -137,6 +136,9 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   /* Set border */
   /* gtk_container_set_border_width (GTK_CONTAINER (status_menu), STATUS_MENU_INNER_BORDER); */
+
+  g_signal_connect (status_menu, "delete-event",
+                    G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
 }

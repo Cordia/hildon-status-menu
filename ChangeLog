@@ -1,3 +1,8 @@
+2009-01-20  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-menu.c (hd_status_menu_init): Fix handling of delete
+	event for the status menu.
+
 2009-01-13  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.6
