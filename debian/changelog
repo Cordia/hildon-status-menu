@@ -1,8 +1,11 @@
-hildon-status-menu (0.3.7~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.7) unstable; urgency=low
 
-  * unreleased
+  Jan Arne Petersen  <jpetersen@openismus.com>
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 13 Jan 2009 14:05:06 +0200
+  * src/hd-status-menu.c (hd_status_menu_init): Fix handling of delete
+    event for the status menu.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 20 Jan 2009 14:46:59 +0200
 
 hildon-status-menu (0.3.6) unstable; urgency=low
 
