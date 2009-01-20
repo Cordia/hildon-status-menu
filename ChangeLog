@@ -1,3 +1,10 @@
+2009-01-20  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* debian/changelog: Update.
+
+	* src/hd-status-area.c (button_press_event_cb, hd_status_area_init):
+	Show status menu on press instead of on release. Fixes NB#97704
+
 2009-01-20  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.7

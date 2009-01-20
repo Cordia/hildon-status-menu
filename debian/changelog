@@ -1,6 +1,6 @@
 hildon-status-menu (0.3.8~unreleased) unstable; urgency=low
 
-  * unreleased
+  * Show status menu on press instead of on release. Fixes NB#97704
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 20 Jan 2009 14:48:30 +0200
 

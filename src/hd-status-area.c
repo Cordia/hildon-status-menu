@@ -84,9 +84,9 @@ struct _HDStatusAreaPrivate
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
 
 static gboolean
-button_release_event_cb (GtkWidget      *widget,
-                         GdkEventButton *event,
-                         HDStatusArea   *status_area)
+button_press_event_cb (GtkWidget      *widget,
+                       GdkEventButton *event,
+                       HDStatusArea   *status_area)
 {
   HDStatusAreaPrivate *priv = status_area->priv;
 
@@ -106,9 +106,9 @@ hd_status_area_init (HDStatusArea *status_area)
   status_area->priv = priv;
 
   /* Create Status area UI */
-  gtk_widget_add_events (GTK_WIDGET (status_area), GDK_BUTTON_RELEASE_MASK);
-  g_signal_connect (G_OBJECT (status_area), "button-release-event",
-                    G_CALLBACK (button_release_event_cb), status_area);
+  gtk_widget_add_events (GTK_WIDGET (status_area), GDK_BUTTON_PRESS_MASK);
+  g_signal_connect (G_OBJECT (status_area), "button-press-event",
+                    G_CALLBACK (button_press_event_cb), status_area);
   gtk_widget_set_app_paintable (GTK_WIDGET (status_area), TRUE);
   gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
