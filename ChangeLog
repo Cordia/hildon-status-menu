@@ -1,3 +1,10 @@
+2009-02-03  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/status-menu.plugins.in: Update priority of
+	rtcom-notification-ui.desktop plugin. Fixes NB#100180, NB#100186
+
+	* debian/changelog: Update
+
 2009-01-26  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.8

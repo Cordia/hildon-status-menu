@@ -17,6 +17,10 @@ X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-internet.desktop
 X-Status-Area-Position=1
 X-Status-Menu-Position=5
 
+[rtcom-notification-ui.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/rtcom-notification-ui.desktop
+X-Status-Area-Position=2
+
 [connui-cellular-forwarding.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-cellular-forwarding.desktop
 X-Status-Area-Position=3
