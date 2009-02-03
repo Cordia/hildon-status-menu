@@ -1,9 +1,9 @@
-hildon-status-menu (0.3.9~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.9) unstable; urgency=low
 
-  * Update priority of rtcom-notification-ui.desktop plugin. Fixes NB#100180,
-    NB#100186
+  * Update priority of rtcom-notification-ui.desktop plugin.
+    Fixes: NB#100180, NB#100186
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 26 Jan 2009 10:13:51 +0200
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 03 Feb 2009 13:13:51 +0200
 
 hildon-status-menu (0.3.8) unstable; urgency=low
 
