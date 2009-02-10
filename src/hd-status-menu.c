@@ -509,6 +509,7 @@ hd_status_menu_new (HDPluginManager *plugin_manager)
 
   status_menu = g_object_new (HD_TYPE_STATUS_MENU,
                               "type", GTK_WINDOW_TOPLEVEL,
+                              "accept-focus", FALSE,
                               "plugin-manager", plugin_manager,
                               NULL);
 

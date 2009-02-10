@@ -1,3 +1,9 @@
+2009-02-10  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-area.c (hd_status_area_new):
+	* src/hd-status-menu.c (hd_status_menu_new): Set accept-focus to FALSE
+	for area and menu.
+
 2009-02-03  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.9

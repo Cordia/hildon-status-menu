@@ -555,6 +555,7 @@ hd_status_area_new (HDPluginManager *plugin_manager)
 
   status_area = g_object_new (HD_TYPE_STATUS_AREA,
                               "type", GTK_WINDOW_TOPLEVEL,
+                              "accept-focus", FALSE,
                               "plugin-manager", plugin_manager,
                               NULL);
 
