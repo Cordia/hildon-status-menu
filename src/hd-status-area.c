@@ -205,9 +205,11 @@ status_area_icon_changed (HDStatusPluginItem *plugin)
                 NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image), pixbuf);
 
+  /*
   g_debug ("status_area_icon_changed. plugin: %s, icon %x",
            hd_status_plugin_item_get_dl_filename (plugin),
            (guint) pixbuf);
+           */
 
   /* Hide image if icon is not set */
   if (pixbuf)
