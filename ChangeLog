@@ -1,3 +1,13 @@
+2009-02-12  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Use RGBA window with transparent background for status area.
+	Fixes: NB#95550.
+
+	* src/hd-status-area.c (hd_status_area_dispose,
+	  hd_status_area_finalize): Remove unused bg_image code.
+	  (hd_status_area_expose_event): Draw transparent background.
+	  (hd_status_area_realize): Set RGBA window.
+
 2009-02-10  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.10

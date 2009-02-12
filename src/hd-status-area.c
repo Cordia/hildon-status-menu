@@ -77,8 +77,6 @@ struct _HDStatusAreaPrivate
   GtkWidget **special_item_image;
 
   GtkWidget *clock_box;
-
-  GdkPixbuf *bg_image;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -145,9 +143,6 @@ hd_status_area_init (HDStatusArea *status_area)
   for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
     gtk_box_pack_start (GTK_BOX (right_hbox), priv->special_item_image[i], FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (right_hbox), priv->icon_box, TRUE, TRUE, 0);
-
-  /* xmas */
-  priv->bg_image = gdk_pixbuf_new_from_file (BG_IMAGE_FILE, NULL);
 }
 
 static GObject *
@@ -177,15 +172,17 @@ hd_status_area_dispose (GObject *object)
   if (priv->plugin_manager)
     priv->plugin_manager = (g_object_unref (priv->plugin_manager), NULL);
 
-  if (priv->bg_image)
-    priv->bg_image = (g_object_unref (priv->bg_image), NULL);
-
   G_OBJECT_CLASS (hd_status_area_parent_class)->dispose (object);
 }
 
 static void
 hd_status_area_finalize (GObject *object)
 {
+  HDStatusAreaPrivate *priv = HD_STATUS_AREA (object)->priv;
+
+  if (priv->special_item_image)
+    priv->special_item_image = (g_free (priv->special_item_image), NULL);
+
   G_OBJECT_CLASS (hd_status_area_parent_class)->finalize (object);
 }
 
@@ -424,18 +421,16 @@ static gboolean
 hd_status_area_expose_event (GtkWidget *widget,
                              GdkEventExpose *event)
 {
-  HDStatusAreaPrivate *priv = HD_STATUS_AREA (widget)->priv;
   cairo_t *cr;
 
+  /* Create cairo context */
   cr = gdk_cairo_create (GDK_DRAWABLE (widget->window));
   gdk_cairo_region (cr, event->region);
   cairo_clip (cr);
 
+  /* Draw transparent background */
   cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
-  if (priv->bg_image)
-    gdk_cairo_set_source_pixbuf (cr, priv->bg_image, 0.0, 0.0);
-  else
-    cairo_set_source_rgb (cr, 0.0, 0.0, 0.0);
+  cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.0);
   cairo_paint (cr);
 
   cairo_destroy (cr);
@@ -447,8 +442,16 @@ hd_status_area_expose_event (GtkWidget *widget,
 static void
 hd_status_area_realize (GtkWidget *widget)
 {
+  GdkScreen *screen;
   GdkDisplay *display;
   Atom atom, wm_type;
+
+  screen = gtk_widget_get_screen (widget);
+  gtk_widget_set_colormap (widget,
+                           gdk_screen_get_rgba_colormap (screen));
+
+  gtk_widget_set_app_paintable (widget,
+                                TRUE);
 
   GTK_WIDGET_CLASS (hd_status_area_parent_class)->realize (widget);
 
