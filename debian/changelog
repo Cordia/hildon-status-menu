@@ -1,6 +1,14 @@
-hildon-status-menu (0.3.11~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.11) unstable; urgency=low
 
-  * unreleased
+  Jan Arne Petersen  <jpetersen@openismus.com>
+
+        Use RGBA window with transparent background for status area.
+        Fixes: NB#95550.
+
+        * src/hd-status-area.c (hd_status_area_dispose,
+          hd_status_area_finalize): Remove unused bg_image code.
+          (hd_status_area_expose_event): Draw transparent background.
+          (hd_status_area_realize): Set RGBA window.
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed, 11 Feb 2009 09:21:01 +0200
 
