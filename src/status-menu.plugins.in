@@ -25,6 +25,21 @@ X-Status-Area-Position=2
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-cellular-forwarding.desktop
 X-Status-Area-Position=3
 
+[sharing-manager-status.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/sharing-manager-status.desktop
+X-Status-Area-Position=4
+X-Status-Menu-Position=13
+
+[ham-notifier.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/ham-notifier.desktop
+X-Status-Area-Position=5
+X-Status-Menu-Position=10
+
+[ham-updates.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/ham-updates.desktop
+X-Status-Area-Position=6
+X-Status-Menu-Position=11
+
 [volume.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/volume.desktop
 X-Status-Area-Position=7
@@ -55,8 +70,8 @@ X-Desktop-File=@hildonstatusmenudesktopentrydir@/hildon-status-menu-usb.desktop
 X-Status-Area-Position=12
 X-Status-Menu-Position=9
 
-[sharing-manager-status.desktop]
-X-Desktop-File=@hildonstatusmenudesktopentrydir@/sharing-manager-status.desktop
+[sync-plugin.desktop]
+X-Desktop-File=@hildonstatusmenudesktopentrydir@/sync-plugin.desktop
 X-Status-Area-Position=13
-X-Status-Menu-Position=13
+X-Status-Menu-Position=12
 

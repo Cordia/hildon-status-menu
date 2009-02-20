@@ -1,3 +1,10 @@
+2009-02-20  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/status-menu.plugins.in: Add priorites of new plugins. Fixes:
+	NB#102636
+
+	* debian/changelog: Update
+
 2009-02-13  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.11

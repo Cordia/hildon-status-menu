@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.12~unreleased) unstable; urgency=low
+
+  * Add priorites of new plugins. Fixes: NB#102636
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed, 11 Feb 2009 09:21:01 +0200
+
 hildon-status-menu (0.3.11) unstable; urgency=low
 
   Jan Arne Petersen  <jpetersen@openismus.com>
