@@ -8,7 +8,8 @@ hildon_status_menu_CFLAGS = \
 	$(HILDON_CFLAGS)							\
 	$(LIBHILDONDESKTOP_CFLAGS)						\
 	$(GNOME_VFS_CFLAGS)							\
-	-DHD_DESKTOP_CONFIG_PATH=\"$(hildondesktopconfdir)\"
+	-DHD_DESKTOP_CONFIG_PATH=\"$(hildondesktopconfdir)\"			\
+	$(MAEMO_LAUNCHER_CFLAGS)
 
 hildon_status_menu_SOURCES = \
 	hildon-status-menu.c							\
@@ -22,7 +23,7 @@ hildon_status_menu_SOURCES = \
 	hd-status-menu-box.h
 
 hildon_status_menu_LDFLAGS = \
-	-rdynamic           							\
 	$(HILDON_LIBS)	    							\
 	$(LIBHILDONDESKTOP_LIBS)						\
-	$(GNOME_VFS_LIBS)
+	$(GNOME_VFS_LIBS)							\
+	$(MAEMO_LAUNCHER_LIBS)

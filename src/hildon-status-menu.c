@@ -101,7 +101,8 @@ main (int argc, char **argv)
   GtkWidget *status_area;
   HDPluginManager *plugin_manager;
 
-  g_thread_init (NULL);
+  if (!g_thread_supported ())
+    g_thread_init (NULL);
   setlocale (LC_ALL, "");
 
   /* Initialize Gtk+ */

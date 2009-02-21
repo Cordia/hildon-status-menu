@@ -2,7 +2,13 @@
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/class/autotools.mk
 
-DEB_DH_INSTALLINIT_ARGS := --no-start -- start 51 2 3 4 . stop 20 0 1 5 6 .
+ifeq (,$(findstring nolauncher,$(DEB_BUILD_OPTIONS)))
+DEB_CONFIGURE_EXTRA_FLAGS = --enable-maemo-launcher
+endif
 
 makebuilddir::
-	./autogen.sh --prefix=/usr --sysconfdir=/etc
+	AUTOGEN_SUBDIR_MODE=1 NOCONFIGURE=yes ./autogen.sh
+
+binary-install/hildon-status-menu::
+	dh_installxsession -u 'post 15'
+	dh_maemolauncher

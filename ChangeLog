@@ -1,3 +1,24 @@
+2009-02-21  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Make hildon-status-menu maemo-launched. Fixes: NB#101035
+
+	* debian/hildon-status-menu.xsession:
+	* debian/hildon-status-menu.install: 
+	* 15hildon-status-menu
+	* Makefile.am: Use dh_installxsession instead of manual installation.
+
+	* configure.ac: Add support for --enable-maemo-launcher flag.
+
+	* debian/control: Add upstart-dev and maemo-launcher-dev dep.
+
+	* debian/rules: Add support for maemo launcher and dh_installxsession
+
+	* src/Makefile.am: Add maemo launcher flags
+
+	* src/hildon-status-menu.c (main): Add g_thread_supported check.
+
+	* debian/changelog: Update
+
 2009-02-20  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* src/status-menu.plugins.in: Add priorites of new plugins. Fixes:
