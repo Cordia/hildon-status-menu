@@ -1,6 +1,6 @@
 hildon-status-menu (0.3.13~unreleased) unstable; urgency=low
 
-  * unreleased
+  * Fixes: NB#105007 - Removed unused maemo launcher guard process
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 23 Feb 2009 13:54:56 +0200
 

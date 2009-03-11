@@ -1,3 +1,11 @@
+2009-03-11  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#105007 - Removed unused maemo launcher guard process
+
+	* debian/hildon-status-menu.xsession: Set MAEMO_INVOKER_DELAY=1
+
+	* debian/changelog: Update
+
 2009-02-23  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.12
