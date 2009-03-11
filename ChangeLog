@@ -1,6 +1,8 @@
 2009-03-11  Jan Arne Petersen  <jpetersen@openismus.com>
 
-	Fixes: NB#105007 - Removed unused maemo launcher guard process
+	* debian/hildon-status-menu.xsession: Use dsmetool.
+
+2009-03-11  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* debian/hildon-status-menu.xsession: Set MAEMO_INVOKER_DELAY=1
 

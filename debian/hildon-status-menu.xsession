@@ -1,3 +1,3 @@
 #!/bin/sh
 
-MAEMO_INVOKER_DELAY=1 /usr/bin/hildon-status-menu &
+/usr/sbin/dsmetool -t /usr/bin/hildon-status-menu
