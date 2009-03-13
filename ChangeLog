@@ -1,3 +1,8 @@
+2009-03-13  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/status-menu.plugins.in: Reorder items in status menu according
+	to new ui spec.
+
 2009-03-12  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.13

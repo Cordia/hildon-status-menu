@@ -1,7 +1,7 @@
 [clock-plugin.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/clock-plugin.desktop
 X-Status-Area-Permanent-Item=Clock
-X-Status-Menu-Position=1
+X-Status-Menu-Position=3
 
 [connui-cellular.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-cellular.desktop
@@ -10,7 +10,7 @@ X-Status-Area-Permanent-Item=Special-Item-0
 [status-area-applet-battery.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/status-area-applet-battery.desktop
 X-Status-Area-Permanent-Item=Special-Item-1
-X-Status-Menu-Position=2
+X-Status-Menu-Position=1
 
 [connui-internet.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-internet.desktop
@@ -43,12 +43,12 @@ X-Status-Menu-Position=11
 [volume.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/volume.desktop
 X-Status-Area-Position=7
-X-Status-Menu-Position=4
+X-Status-Menu-Position=2
 
 [status-area-applet-profiles.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/status-area-applet-profiles.desktop
 X-Status-Area-Position=8
-X-Status-Menu-Position=3
+X-Status-Menu-Position=4
 
 [rtcom-presence-ui.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/rtcom-presence-ui.desktop
