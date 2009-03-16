@@ -135,7 +135,7 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   gtk_container_add (GTK_CONTAINER (status_menu), alignment);
 
   /* Set border */
-  /* gtk_container_set_border_width (GTK_CONTAINER (status_menu), STATUS_MENU_INNER_BORDER); */
+  gtk_container_set_border_width (GTK_CONTAINER (status_menu), HILDON_MARGIN_DOUBLE);
 
   g_signal_connect (status_menu, "delete-event",
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
@@ -337,6 +337,8 @@ static void
 hd_status_menu_map (GtkWidget *widget)
 {
   HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
+  GdkScreen *screen;
+  gint window_width;
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->map (widget);
 
@@ -366,6 +368,11 @@ hd_status_menu_map (GtkWidget *widget)
           priv->transfer_window = NULL;
       }
   }
+
+  /* Horizontally center menu */
+  screen = gtk_widget_get_screen (widget);
+  gtk_window_get_size (GTK_WINDOW (widget), &window_width, NULL);
+  gtk_window_move (GTK_WINDOW (widget), (gdk_screen_get_width (screen) - window_width) / 2, 0);
 }
 
 static void
