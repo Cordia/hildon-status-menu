@@ -1,3 +1,13 @@
+hildon-status-menu (0.3.14) unstable; urgency=low
+
+  Jan Arne:
+  * src/hd-status-menu.c (hd_status_menu_init, hd_status_menu_map):
+    Center status menu.
+  * src/status-menu.plugins.in: Reorder items in status menu according
+    to new ui spec.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 17 Mar 2009 11:08:20 +0200
+
 hildon-status-menu (0.3.13) unstable; urgency=low
 
   * Jan Arne: Use dsmetool to start h-s-m.
