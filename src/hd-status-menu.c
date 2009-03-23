@@ -74,6 +74,8 @@ struct _HDStatusMenuPrivate
   GdkWindow       *transfer_window;
 
   HDPluginManager *plugin_manager;
+
+  gboolean         pressed_outside;
 };
 
 #define HD_STATUS_MENU_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_MENU, HDStatusMenuPrivate));
@@ -349,7 +351,9 @@ hd_status_menu_map (GtkWidget *widget)
       priv->transfer_window = grab_transfer_window_get (widget);
 
       if (gdk_pointer_grab (priv->transfer_window, TRUE,
-                            GDK_BUTTON_RELEASE_MASK,
+                            GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
+                            GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK |
+                            GDK_POINTER_MOTION_MASK,
                             NULL, NULL,
                             GDK_CURRENT_TIME) == GDK_GRAB_SUCCESS) {
           if (gdk_keyboard_grab (priv->transfer_window, TRUE,
@@ -395,31 +399,53 @@ hd_status_menu_unmap (GtkWidget *widget)
 }
 
 static gboolean
-hd_status_menu_button_release_event (GtkWidget      *widget,
-                                     GdkEventButton *event)
+hd_status_menu_button_press_event (GtkWidget      *widget,
+                                   GdkEventButton *event)
 {
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
   int x, y;
-  gboolean released_outside;
 
   gdk_window_get_position (widget->window, &x, &y);
 
   /* Whether the button has been released outside the widget */
-  released_outside = (event->x_root < x || event->x_root > x + widget->allocation.width ||
-                      event->y_root < y || event->y_root > y + widget->allocation.height);
+  priv->pressed_outside = (event->x_root < x || event->x_root > x + widget->allocation.width ||
+                           event->y_root < y || event->y_root > y + widget->allocation.height);
 
-  if (released_outside)
+  if (GTK_WIDGET_CLASS (hd_status_menu_parent_class)->button_press_event)
+    return GTK_WIDGET_CLASS (hd_status_menu_parent_class)->button_press_event (widget, event);
+  else
+    return FALSE;
+}
+
+static gboolean
+hd_status_menu_button_release_event (GtkWidget      *widget,
+                                     GdkEventButton *event)
+{
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
+
+  if (priv->pressed_outside)
     {
-      gtk_widget_hide (widget);
+      int x, y;
+      gboolean released_outside;
+
+      gdk_window_get_position (widget->window, &x, &y);
+
+      /* Whether the button has been released outside the widget */
+      released_outside = (event->x_root < x || event->x_root > x + widget->allocation.width ||
+                          event->y_root < y || event->y_root > y + widget->allocation.height);
+
+      if (released_outside)
+        {
+          gtk_widget_hide (widget);
+        }
+
+      priv->pressed_outside = FALSE;
     }
 
   if (GTK_WIDGET_CLASS (hd_status_menu_parent_class)->button_release_event)
-    {
-      return GTK_WIDGET_CLASS (hd_status_menu_parent_class)->button_release_event (widget, event);
-    } 
+    return GTK_WIDGET_CLASS (hd_status_menu_parent_class)->button_release_event (widget, event);
   else
-    {
-      return FALSE;
-    }
+    return FALSE;
 }
 
 static void
@@ -486,6 +512,7 @@ hd_status_menu_class_init (HDStatusMenuClass *klass)
   widget_class->realize = hd_status_menu_realize;
   widget_class->map = hd_status_menu_map;
   widget_class->unmap = hd_status_menu_unmap;
+  widget_class->button_press_event = hd_status_menu_button_press_event;
   widget_class->button_release_event = hd_status_menu_button_release_event;
 
   container_class->check_resize = hd_status_menu_check_resize;

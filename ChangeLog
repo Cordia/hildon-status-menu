@@ -1,3 +1,10 @@
+2009-03-23  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	* src/hd-status-menu.c (plugin_manager, pressed_outside,
+	  hd_status_menu_map, hd_status_menu_button_press_event,
+	  hd_status_menu_button_release_event, hd_status_menu_class_init):
+	  Close status menu only when press was outside, too.
+
 2009-03-17  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.14
