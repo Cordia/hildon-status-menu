@@ -1,6 +1,6 @@
-hildon-status-menu (0.3.15~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.15) unstable; urgency=low
 
-  * writeme
+  * Jan Arne: Close status menu only when press was outside.
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 31 Mar 2009 08:49:30 +0300
 

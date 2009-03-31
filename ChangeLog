@@ -1,3 +1,8 @@
+2009-03-31  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.3.15
+	* configure.ac: 0.3.15
+
 2009-03-23  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* src/hd-status-menu.c (plugin_manager, pressed_outside,
