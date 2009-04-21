@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.16~unreleased) unstable; urgency=low
+
+  * Keep the console quiet unless DEBUG_OUTPUT environment variable is defined.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 21 Apr 2009 08:28:00 +0300
+
 hildon-status-menu (0.3.15) unstable; urgency=low
 
   * Jan Arne: Close status menu only when press was outside.
