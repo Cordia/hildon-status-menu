@@ -1,5 +1,8 @@
 2009-04-21  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
+	Released 0.3.16
+	* configure.ac: 0.3.16
+
 	* src/hildon-status-menu.c (console_quiet): New function (based on
 	maemo-launcher code).
 	(main): Call console_quiet to quiesce the console output unless

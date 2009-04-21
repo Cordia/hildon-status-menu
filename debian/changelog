@@ -1,4 +1,4 @@
-hildon-status-menu (0.3.16~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.16) unstable; urgency=low
 
   * Keep the console quiet unless DEBUG_OUTPUT environment variable is defined.
 
