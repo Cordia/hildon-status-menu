@@ -34,6 +34,10 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+
 #include "hd-status-area.h"
 #include "hd-status-menu.h"
 #include "hd-status-menu-config.h"
@@ -95,6 +99,19 @@ load_plugins_idle (gpointer data)
   return FALSE;
 }
 
+static void
+console_quiet(void)
+{
+  close(0);
+  close(1);
+  close(2);
+
+  if (open("/dev/null", O_RDONLY) < 0)
+    g_warning ("%s: failed opening /dev/null read-only", __func__);
+  if (dup(open("/dev/null", O_WRONLY)) < 0)
+    g_warning ("%s: failed opening /dev/null write-only", __func__);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -119,6 +136,13 @@ main (int argc, char **argv)
 
   /* Setup Stamp File */
   hd_stamp_file_init (HD_STATUS_MENU_STAMP_FILE);
+
+  if (getenv ("DEBUG_OUTPUT") == NULL)
+    {
+      printf ("%s: console is quiet, define DEBUG_OUTPUT to prevent this.\n",
+              argv[0]);
+      console_quiet ();
+    }
 
   /* Create a plugin manager instance */
   plugin_manager = hd_plugin_manager_new (
