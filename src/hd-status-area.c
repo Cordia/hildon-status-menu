@@ -445,6 +445,8 @@ hd_status_area_realize (GtkWidget *widget)
   GdkScreen *screen;
   GdkDisplay *display;
   Atom atom, wm_type;
+  GdkPixmap *pixmap;
+  cairo_t *cr;
 
   screen = gtk_widget_get_screen (widget);
   gtk_widget_set_colormap (widget,
@@ -469,6 +471,16 @@ hd_status_area_realize (GtkWidget *widget)
                    GDK_WINDOW_XID (widget->window),
                    atom, XA_ATOM, 32, PropModeReplace,
                    (unsigned char *)&wm_type, 1);
+
+  /* Set background to transparent pixmap */
+  pixmap = gdk_pixmap_new (GDK_DRAWABLE (widget->window), 1, 1, -1);
+  cr = gdk_cairo_create (GDK_DRAWABLE (pixmap));
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+  cairo_set_source_rgba (cr, 0.0, 0.0, 0.0, 0.0);
+  cairo_paint (cr);
+  cairo_destroy (cr);
+
+  gdk_window_set_back_pixmap (widget->window, pixmap, FALSE);
 }
 
 static void
