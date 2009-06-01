@@ -1,3 +1,8 @@
+2009-06-01  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.3.17
+	* configure.ac: 0.3.17
+
 2009-05-20  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	* src/hd-status-area.c (hd_status_area_realize): Set background to

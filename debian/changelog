@@ -1,3 +1,11 @@
+hildon-status-menu (0.3.17) unstable; urgency=low
+
+  Jan Arne:
+  * src/hd-status-area.c (hd_status_area_realize): Set background to
+    transparent pixmap.
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon,  1 Jun 2009 08:39:23 +0300
+
 hildon-status-menu (0.3.16) unstable; urgency=low
 
   * Keep the console quiet unless DEBUG_OUTPUT environment variable is defined.
