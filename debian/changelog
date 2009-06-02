@@ -1,6 +1,7 @@
 hildon-status-menu (0.3.18~unreleased) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * Fixes: NB#119591 - Memory corruption code in hildon-status-menu
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon,  1 Jun 2009 08:41:45 +0300
 

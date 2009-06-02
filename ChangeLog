@@ -1,3 +1,14 @@
+2009-06-02  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#119591 - Memory corruption code in hildon-status-menu.
+
+	* src/hd-status-area.c (remove_from_container,
+	  hd_status_area_plugin_removed_cb): Remove instead of destroy.
+
+	* src/hildon-status-menu.c (signal_handler, main): Use gtk_main_quit.
+
+	* debian/changelog: Update
+
 2009-06-01  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.17

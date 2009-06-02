@@ -319,6 +319,14 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
 }
 
 static void
+remove_from_container (GtkWidget    *widget,
+                       GtkContainer *container)
+{
+  gtk_container_remove (container,
+                        widget);
+}
+
+static void
 hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
                                   GObject         *plugin,
                                   HDStatusArea    *status_area)
@@ -341,7 +349,9 @@ hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
   else
     {
       /* Remove all widgets from the clock box */
-      gtk_container_foreach (GTK_CONTAINER (priv->clock_box), (GtkCallback) gtk_widget_destroy, NULL);
+      gtk_container_foreach (GTK_CONTAINER (priv->clock_box),
+                             (GtkCallback) remove_from_container,
+                             priv->clock_box);
     }
 
   g_object_unref (plugin);

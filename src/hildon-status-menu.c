@@ -52,9 +52,7 @@ signal_handler (int signal)
 {
   if (signal == SIGTERM)
   {
-    hd_stamp_file_finalize (HD_STATUS_MENU_STAMP_FILE);
-
-    exit (0);
+    gtk_main_quit ();
   }
 }
 
@@ -166,6 +164,9 @@ main (int argc, char **argv)
 
   /* Start the main loop */
   gtk_main ();
+
+  /* Delete the stamp file */
+  hd_stamp_file_finalize (HD_STATUS_MENU_STAMP_FILE);
 
   return 0;
 }
