@@ -1,5 +1,17 @@
 2009-06-02  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	Fixes: NB#120006 - Status Area layout not according to latest
+	guidelines
+
+	* src/hd-status-area-box.c (ITEM_HEIGHT, ITEM_WIDTH):
+	* src/hd-status-area.c (SPECIAL_ICON_WIDTH, SPECIAL_ICON_HEIGHT,
+	  CUSTOM_MARGIN_BOTTOM, hd_status_area_init): Fix according to
+	  latestet layout guide.
+
+	* debian/changelog: Update
+
+2009-06-02  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	Fixes: NB#119591 - Memory corruption code in hildon-status-menu.
 
 	* src/hd-status-area.c (remove_from_container,

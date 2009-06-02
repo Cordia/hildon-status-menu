@@ -26,8 +26,8 @@
 #include "hd-status-area-box.h"
 
 /* UI Style guide */
-#define ITEM_HEIGHT 16
-#define ITEM_WIDTH 16
+#define ITEM_HEIGHT 18
+#define ITEM_WIDTH 18
 #define SPACING 0
 #define MAX_VISIBLE_CHILDREN 8
 

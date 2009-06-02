@@ -41,14 +41,10 @@
 #define STATUS_AREA_HEIGHT 56
 #define MINIMUM_STATUS_AREA_WIDTH 112
 
-#define STATUS_AREA_ICON_HEIGHT 16
-#define SPECIAL_ICON_WIDTH 16
-#define SPECIAL_ICON_HEIGHT 32
+#define SPECIAL_ICON_WIDTH 18
+#define SPECIAL_ICON_HEIGHT 36
 
-#define CUSTOM_MARGIN 22
-
-/* xmas workaround */
-#define BG_IMAGE_FILE "/usr/share/themes/default/images/wmTitleBar.png"
+#define CUSTOM_MARGIN_BOTTOM 12
 
 /* Configuration file keys */
 
@@ -111,7 +107,9 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
   alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 0, 0, CUSTOM_MARGIN, CUSTOM_MARGIN);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment),
+                             HILDON_MARGIN_DEFAULT, CUSTOM_MARGIN_BOTTOM,
+                             HILDON_MARGIN_DOUBLE, HILDON_MARGIN_DOUBLE);
   gtk_widget_show (alignment);
 
   main_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_DOUBLE);
