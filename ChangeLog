@@ -1,3 +1,8 @@
+2009-06-08  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.3.18
+	* configure.ac: 0.3.18
+
 2009-06-02  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Fixes: NB#120006 - Status Area layout not according to latest
