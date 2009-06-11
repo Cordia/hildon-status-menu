@@ -1,3 +1,10 @@
+2009-06-11  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	* src/hd-status-menu.c (hd_status_menu_dbus_handler): New function to
+	catch D-Bus signals. Exits when shutdown_ind is received.
+	(hd_status_menu_init): Connect to D-Bus system bus and start listening
+	to shutdown_ind from DSME.
+
 2009-06-08  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.18

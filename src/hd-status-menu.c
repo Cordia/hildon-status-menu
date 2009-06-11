@@ -34,6 +34,7 @@
 #include <X11/Xatom.h>
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "hd-status-menu.h"
 #include "hd-status-menu-box.h"
@@ -59,6 +60,9 @@
 #define STATUS_MENU_ITEM_HEIGHT 70 /* Master Layout Guide */
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
 #define STATUS_MENU_PANNABLE_WIDTH 656
+
+#define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
+#define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
 
 enum
 {
@@ -99,14 +103,50 @@ notify_visible_items_cb (GObject      *object,
                                MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
 }
 
+static DBusHandlerResult
+hd_status_menu_dbus_handler (DBusConnection *conn,
+                             DBusMessage *msg, void *data)
+{
+  if (dbus_message_is_signal(msg, DSME_SIGNAL_INTERFACE,
+                             DSME_SHUTDOWN_SIGNAL_NAME))
+    {
+            /*
+      g_warning ("%s: " DSME_SHUTDOWN_SIGNAL_NAME " from DSME", __func__);
+      */
+      exit (0);
+    }
+
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
 static void
 hd_status_menu_init (HDStatusMenu *status_menu)
 {
+  DBusConnection *sysbus;
+  DBusError derror;
   HDStatusMenuPrivate *priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
   GtkWidget *alignment; /* Used to center the pannable */
 
   /* Set priv member */
   status_menu->priv = priv;
+
+  /* connect to D-Bus system bus */
+  dbus_error_init (&derror);
+  sysbus = dbus_bus_get (DBUS_BUS_SYSTEM, &derror);
+  if (!sysbus)
+    {
+      dbus_error_free (&derror);
+      g_warning ("%s: failed to connect to the system bus", __func__);
+    }
+  else
+    {
+      /* listen to shutdown_ind from DSME */
+      dbus_bus_add_match (sysbus, "type='signal', interface='"
+                          DSME_SIGNAL_INTERFACE "'", NULL);
+
+      dbus_connection_add_filter (sysbus, hd_status_menu_dbus_handler,
+                                  NULL, NULL);
+    }
 
   /* Create widgets */
   priv->box = hd_status_menu_box_new ();
