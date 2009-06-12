@@ -2,6 +2,7 @@ hildon-status-menu (0.3.19~unreleased) unstable; urgency=low
 
   Kimmo:
   * Exit on shutdown_ind signal.
+  * Fixes: NB#111430 - SA is getting displayed during the shutdown process
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon,  8 Jun 2009 10:38:16 +0300
 
