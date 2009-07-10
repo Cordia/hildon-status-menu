@@ -91,6 +91,9 @@ AC_SUBST(GNOME_VFS_LIBS)
 hildondesktopconfdir=${sysconfdir}/hildon-desktop
 AC_SUBST(hildondesktopconfdir)
 
+initscriptdir=${sysconfdir}/init.d
+AC_SUBST(initscriptdir)
+
 hildonstatusmenudesktopentrydir=`pkg-config libhildondesktop-1 --variable=hildonstatusmenudesktopentrydir`
 AC_SUBST(hildonstatusmenudesktopentrydir)
 

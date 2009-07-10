@@ -1,8 +1,10 @@
-hildon-status-menu (0.3.20~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.20) unstable; urgency=low
 
-  * foo
+  [ Peter Csaszar ]
+  * adding init script to make af-sb-init.sh script to start status menu
+    on sbox
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 15 Jun 2009 09:23:43 +0300
+ -- Peter Csaszar <peter.csaszar@blumsoft.eu>  Fri, 10 Jul 2009 14:08:57 +0200
 
 hildon-status-menu (0.3.19) unstable; urgency=low
 
