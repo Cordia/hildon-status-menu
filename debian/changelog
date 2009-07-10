@@ -1,8 +1,8 @@
 hildon-status-menu (0.3.20) unstable; urgency=low
 
   [ Peter Csaszar ]
-  * adding init script to make af-sb-init.sh script to start status menu
-    on sbox
+  * Fixes: NB#127515 - adding init script to make af-sb-init.sh script to
+    start status menu on sbox
 
  -- Peter Csaszar <peter.csaszar@blumsoft.eu>  Fri, 10 Jul 2009 14:08:57 +0200
 
