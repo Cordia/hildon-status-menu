@@ -25,10 +25,18 @@
 
 #include "hd-status-area-box.h"
 
-/* UI Style guide */
+#include <hildon/hildon.h>
+
+/* Status Area UI Style guide */
 #define ITEM_HEIGHT 18
 #define ITEM_WIDTH 18
-#define SPACING 0
+
+#define CUSTOM_MARGIN_9 9
+
+#define SPACING 2
+
+#define PADDING_LEFT HILDON_MARGIN_HALF
+
 #define MAX_VISIBLE_CHILDREN 8
 
 struct _HDStatusAreaBoxPrivate
@@ -162,7 +170,6 @@ hd_status_area_box_size_allocate (GtkWidget     *widget,
   GtkAllocation child_allocation = {0, 0, 0, 0};
   guint visible_children = 0;
   GList *c;
-  guint x[2] = {0, 0};
 
   priv = HD_STATUS_AREA_BOX (widget)->priv;
 
@@ -184,13 +191,19 @@ hd_status_area_box_size_allocate (GtkWidget     *widget,
       if (!GTK_WIDGET_VISIBLE (info->widget))
         continue;
 
+      /* there are some widgets which need a size request */
       gtk_widget_size_request (info->widget, &child_requisition);
 
-      child_allocation.x = allocation->x + border_width + x[visible_children % 2];
-      child_allocation.y = allocation->y + border_width + (visible_children % 2 * (ITEM_HEIGHT + SPACING));
+      child_allocation.x = allocation->x +
+                           border_width +
+                           PADDING_LEFT +
+                           (visible_children / 2) * (ITEM_WIDTH + SPACING);
+      child_allocation.y = allocation->y +
+                           border_width +
+                           (visible_children % 2 * (ITEM_HEIGHT + SPACING));
 
-      child_allocation.width = child_requisition.width;
-      x[visible_children % 2] += child_requisition.width;
+      child_allocation.width = ITEM_WIDTH;
+      child_allocation.height = ITEM_HEIGHT;
 
       gtk_widget_size_allocate (info->widget, &child_allocation);
       gtk_widget_set_child_visible (info->widget, TRUE);
@@ -215,7 +228,6 @@ hd_status_area_box_size_request (GtkWidget      *widget,
   guint border_width;
   GList *c;
   guint visible_children = 0;
-  guint width[2] = {0, 0};
 
   priv = HD_STATUS_AREA_BOX (widget)->priv;
 
@@ -233,16 +245,28 @@ hd_status_area_box_size_request (GtkWidget      *widget,
       /* there are some widgets which need a size request */
       gtk_widget_size_request (info->widget, &child_requisition);
 
-      if (visible_children < MAX_VISIBLE_CHILDREN)
-        width[visible_children % 2] += child_requisition.width;
-
       visible_children++;
     }
 
-  /* width is maximum width of both rows */
-  requisition->width =  MAX (width[0], width[1]) + 2 * border_width;
-  /* height is two rows */
-  requisition->height = 2 * ITEM_HEIGHT + SPACING + 2 * border_width;
+  visible_children = MIN (MAX_VISIBLE_CHILDREN, visible_children);
+
+  if (visible_children == 0)
+    {
+      requisition->width = 0;
+      requisition->height = 0;
+    }
+  else
+    {
+      /* width is maximum width of both rows */
+      requisition->width =  2 * border_width +
+                            PADDING_LEFT +
+                            ((visible_children + 1) / 2) * ITEM_WIDTH +
+                            (visible_children - 1 / 2) * SPACING;
+      /* height is two rows */
+      requisition->height = 2 * border_width +
+                            2 * ITEM_HEIGHT +
+                            SPACING;
+    }
 }
 
 static void

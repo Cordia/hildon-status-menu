@@ -44,7 +44,8 @@
 #define SPECIAL_ICON_WIDTH 18
 #define SPECIAL_ICON_HEIGHT 36
 
-#define CUSTOM_MARGIN_BOTTOM 12
+#define CUSTOM_MARGIN_9 9
+#define CUSTOM_MARGIN_10 10
 
 /* Configuration file keys */
 
@@ -93,7 +94,7 @@ static void
 hd_status_area_init (HDStatusArea *status_area)
 {
   HDStatusAreaPrivate *priv = HD_STATUS_AREA_GET_PRIVATE (status_area);
-  GtkWidget *alignment, *main_hbox, *right_hbox;
+  GtkWidget *main_alignment, *left_alignment, *main_hbox, *left_hbox, *special_hbox;
   guint i;
 
   /* Set priv member */
@@ -106,17 +107,27 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_set_app_paintable (GTK_WIDGET (status_area), TRUE);
   gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
-  alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (alignment),
-                             HILDON_MARGIN_DEFAULT, CUSTOM_MARGIN_BOTTOM,
+  main_alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (main_alignment),
+                             CUSTOM_MARGIN_9, CUSTOM_MARGIN_9,
                              HILDON_MARGIN_DOUBLE, HILDON_MARGIN_DOUBLE);
-  gtk_widget_show (alignment);
+  gtk_widget_show (main_alignment);
 
-  main_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_DOUBLE);
+  left_alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_alignment_set_padding (GTK_ALIGNMENT (left_alignment),
+                             CUSTOM_MARGIN_10 - CUSTOM_MARGIN_9,
+                             CUSTOM_MARGIN_10 - CUSTOM_MARGIN_9,
+                             0, 0);
+  gtk_widget_show (left_alignment);
+
+  main_hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (main_hbox);
 
-  right_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_HALF);
-  gtk_widget_show (right_hbox);
+  left_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_DOUBLE);
+  gtk_widget_show (left_hbox);
+
+  special_hbox = gtk_hbox_new (FALSE, HILDON_MARGIN_HALF);
+  gtk_widget_show (special_hbox);
 
   priv->clock_box = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
 /*  gtk_widget_set_size_request (priv->clock_box, SPECIAL_ICON_WIDTH * 2, STATUS_AREA_ICON_HEIGHT); */
@@ -134,13 +145,15 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_show (priv->icon_box);
 
   /* Pack widgets */
-  gtk_container_add (GTK_CONTAINER (status_area), alignment);
-  gtk_container_add (GTK_CONTAINER (alignment), main_hbox);
-  gtk_box_pack_start (GTK_BOX (main_hbox), priv->clock_box, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (main_hbox), right_hbox, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (status_area), main_alignment);
+  gtk_container_add (GTK_CONTAINER (main_alignment), main_hbox);
+  gtk_box_pack_start (GTK_BOX (main_hbox), left_alignment, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (left_alignment), left_hbox);
+  gtk_box_pack_start (GTK_BOX (left_hbox), priv->clock_box, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (left_hbox), special_hbox, FALSE, FALSE, 0);
   for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
-    gtk_box_pack_start (GTK_BOX (right_hbox), priv->special_item_image[i], FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (right_hbox), priv->icon_box, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (special_hbox), priv->special_item_image[i], FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_hbox), priv->icon_box, TRUE, TRUE, 0);
 }
 
 static GObject *
