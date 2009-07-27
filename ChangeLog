@@ -1,6 +1,6 @@
 2009-07-24  Jan Arne Petersen  <jpetersen@openismus.com>
 
-	Changes to status area margins and icons
+	Fixes: NB#127609 - Changes to status area margins and icons
 
 	* src/hd-status-area-box.c (ITEM_HEIGHT, ITEM_WIDTH, CUSTOM_MARGIN_9,
 	  SPACING, PADDING_LEFT, hd_status_area_box_size_allocate,
