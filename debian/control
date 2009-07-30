@@ -15,6 +15,6 @@ Package: hildon-status-menu-dbg
 Section: devel
 Architecture: any
 Priority: extra
-Depends: hildon-status-menu (= ${source:Version})
+Depends: hildon-status-menu (= ${Source-Version})
 Description: Debug symbols for Hildon Status Menu application
 
