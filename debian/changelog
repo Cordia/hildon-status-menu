@@ -1,6 +1,7 @@
 hildon-status-menu (0.3.22~unreleased) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * Fixes: NB#132456 - Status menu should not grab pointer
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Thu, 30 Jul 2009 12:56:26 +0300
 

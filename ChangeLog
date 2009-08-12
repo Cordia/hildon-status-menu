@@ -1,3 +1,13 @@
+2009-08-12  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#132456 - Status menu should not grab pointer
+
+	* src/hd-status-menu.c (hd_status_menu_init, hd_status_menu_realize,
+	  hd_status_menu_map): Remove pointer grab and use a modal blocker
+	  window in hildon-desktop instead.
+
+	* debian/changelog: Update
+
 2009-07-30  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.21
