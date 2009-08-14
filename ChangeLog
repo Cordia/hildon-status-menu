@@ -1,3 +1,13 @@
+2009-08-14  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#133037 - Status menu is shown on top of USB mode dialog and
+	unable to close the status menu till the USB dailog is closed.
+
+	* src/hd-status-menu.c (hd_status_menu_init): Set window to be modal
+	again, was accidentally removed by previous patch.
+
+	* debian/changelog: Update
+
 2009-08-12  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.22

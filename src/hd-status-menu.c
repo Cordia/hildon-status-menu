@@ -179,8 +179,8 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   g_signal_connect (status_menu, "delete-event",
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
-/*
-  gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);*/
+
+  gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
 }
 
 static void
