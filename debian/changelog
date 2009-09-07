@@ -1,6 +1,10 @@
 hildon-status-menu (0.3.24~unreleased) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * NB#133988 - RESTART should be implemented for
+    /etc/init.d/hildon-status-menu
+  * NB#135390 - Status Area creates ConfigureRequest events even when it does
+    not change size
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 14 Aug 2009 15:08:50 +0300
 

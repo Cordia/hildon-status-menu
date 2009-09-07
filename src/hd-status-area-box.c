@@ -42,6 +42,8 @@
 struct _HDStatusAreaBoxPrivate
 {
   GList *children;
+
+  guint max_visible_children;
 };
 
 typedef struct _HDStatusAreaBoxChild HDStatusAreaBoxChild;
@@ -182,7 +184,7 @@ hd_status_area_box_size_allocate (GtkWidget     *widget,
   child_allocation.height = ITEM_HEIGHT;
 
   /* Place the first eight visible children */
-  for (c = priv->children; c && visible_children < MAX_VISIBLE_CHILDREN; c = c->next)
+  for (c = priv->children; c && visible_children < priv->max_visible_children; c = c->next)
     {
       HDStatusAreaBoxChild *info = c->data;
       GtkRequisition child_requisition;
@@ -248,7 +250,7 @@ hd_status_area_box_size_request (GtkWidget      *widget,
       visible_children++;
     }
 
-  visible_children = MIN (MAX_VISIBLE_CHILDREN, visible_children);
+  visible_children = MIN (priv->max_visible_children, visible_children);
 
   if (visible_children == 0)
     {
@@ -298,6 +300,8 @@ hd_status_area_box_init (HDStatusAreaBox *box)
   box->priv = G_TYPE_INSTANCE_GET_PRIVATE ((box), HD_TYPE_STATUS_AREA_BOX, HDStatusAreaBoxPrivate);
 
   box->priv->children = NULL;
+
+  box->priv->max_visible_children = MAX_VISIBLE_CHILDREN;
 }
 
 GtkWidget *

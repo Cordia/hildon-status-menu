@@ -74,6 +74,8 @@ struct _HDStatusAreaPrivate
   GtkWidget **special_item_image;
 
   GtkWidget *clock_box;
+
+  gboolean resize_after_map;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -505,8 +507,19 @@ hd_status_area_realize (GtkWidget *widget)
 }
 
 static void
+hd_status_area_map (GtkWidget *widget)
+{
+  HDStatusAreaPrivate *priv = HD_STATUS_AREA (widget)->priv;
+
+  priv->resize_after_map = TRUE;
+
+  GTK_WIDGET_CLASS (hd_status_area_parent_class)->map (widget);
+}
+
+static void
 hd_status_area_check_resize (GtkContainer *container)
 {
+  HDStatusAreaPrivate *priv = HD_STATUS_AREA (container)->priv;
   GtkWindow *window = GTK_WINDOW (container);
   GtkWidget *widget = GTK_WIDGET (container);
 
@@ -541,17 +554,27 @@ hd_status_area_check_resize (GtkContainer *container)
   if (GTK_WIDGET_VISIBLE (container))
     {
       GtkRequisition req;
+      gint width, height;
 
       gtk_widget_size_request (widget, &req);
 
-      /* Request the window manager to resize the window to
-       * the required size (will result in a configure notify event
-       * see above) */
-      gdk_window_resize (widget->window, req.width, req.height);
+      gdk_drawable_get_size (GDK_DRAWABLE (widget->window),
+                             &width, &height);
 
-      /* Resize children (also if size not changed and so no
-       * configure notify event is triggered) */
-      gtk_container_resize_children (GTK_CONTAINER (widget));
+      if (priv->resize_after_map ||
+          req.width != width || req.height != height)
+        {
+          priv->resize_after_map = FALSE;
+
+          /* Request the window manager to resize the window to
+           * the required size (will result in a configure notify event
+           * see above) */
+          gdk_window_resize (widget->window, req.width, req.height);
+
+          /* Resize children (also if size not changed and so no
+            configure notify event is triggered) */
+          gtk_container_resize_children (GTK_CONTAINER (widget));
+        }
     }
 }
 
@@ -571,6 +594,7 @@ hd_status_area_class_init (HDStatusAreaClass *klass)
   object_class->set_property = hd_status_area_set_property;
 
   widget_class->realize = hd_status_area_realize;
+  widget_class->map = hd_status_area_map;
   widget_class->expose_event = hd_status_area_expose_event;
 
   container_class->check_resize = hd_status_area_check_resize;

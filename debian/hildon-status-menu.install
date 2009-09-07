@@ -1,4 +1,3 @@
-debian/tmp/etc/init.d/hildon-status-menu
 debian/tmp/etc/hildon-desktop/status-menu.conf
 debian/tmp/etc/hildon-desktop/status-menu.plugins
 debian/tmp/usr/bin/hildon-status-menu

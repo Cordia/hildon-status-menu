@@ -1,3 +1,26 @@
+2009-09-07  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#133988 - RESTART should be implemented for
+	/etc/init.d/hildon-status-menu
+	Fixes: NB#135390 - Status Area creates ConfigureRequest events even
+	when it does not change size
+
+	* src/hd-status-area-box.c (_HDStatusAreaBoxPrivate::children,
+	  _HDStatusAreaBoxPrivate::max_visible_children,
+	  hd_status_area_box_size_allocate, hd_status_area_box_size_request,
+	  hd_status_area_box_init):
+	* src/hd-status-area.c (_HDStatusAreaPrivate::clock_box,
+	  _HDStatusAreaPrivate::resize_after_map, hd_status_area_map,
+	  hd_status_area_check_resize, hd_status_area_class_init): Only emit a
+	  ConfigureRequest when size is really changed. 
+
+	* Makefile.am:
+	* debian/hildon-status-menu.install:
+	* hildon-status-menu (deleted): Remove unused and broken
+	hildon-status-menu init script.
+
+	* debian/changelog: Update
+
 2009-08-14  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.23
