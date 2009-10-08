@@ -37,7 +37,8 @@
 
 #define PADDING_LEFT HILDON_MARGIN_HALF
 
-#define MAX_VISIBLE_CHILDREN 8
+#define MAX_VISIBLE_CHILDREN_PORTRAIT 2
+#define MAX_VISIBLE_CHILDREN_LANDSCAPE 8
 
 struct _HDStatusAreaBoxPrivate
 {
@@ -222,6 +223,16 @@ hd_status_area_box_size_allocate (GtkWidget     *widget,
     }
 }
 
+static gboolean
+is_portrait_mode (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+
+  return gdk_screen_get_height (screen) > gdk_screen_get_width (screen);
+}
+
 static void
 hd_status_area_box_size_request (GtkWidget      *widget,
                                  GtkRequisition *requisition)
@@ -232,6 +243,11 @@ hd_status_area_box_size_request (GtkWidget      *widget,
   guint visible_children = 0;
 
   priv = HD_STATUS_AREA_BOX (widget)->priv;
+
+  if (is_portrait_mode (widget))
+    priv->max_visible_children = MAX_VISIBLE_CHILDREN_PORTRAIT;
+  else
+    priv->max_visible_children = MAX_VISIBLE_CHILDREN_LANDSCAPE;
 
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
@@ -272,6 +288,32 @@ hd_status_area_box_size_request (GtkWidget      *widget,
 }
 
 static void
+hd_status_area_box_realize (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+  g_signal_connect_swapped (screen, "size-changed",
+                            G_CALLBACK (gtk_widget_queue_resize),
+                            widget);
+
+  GTK_WIDGET_CLASS (hd_status_area_box_parent_class)->realize (widget);
+}
+
+static void
+hd_status_area_box_unrealize (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+  g_signal_handlers_disconnect_by_func (screen,
+                                        gtk_widget_queue_resize,
+                                        widget);
+
+  GTK_WIDGET_CLASS (hd_status_area_box_parent_class)->unrealize (widget);
+}
+
+static void
 hd_status_area_box_class_init (HDStatusAreaBoxClass *klass)
 {
   GtkContainerClass *container_class = GTK_CONTAINER_CLASS (klass);
@@ -286,6 +328,8 @@ hd_status_area_box_class_init (HDStatusAreaBoxClass *klass)
 
   widget_class->size_allocate = hd_status_area_box_size_allocate;
   widget_class->size_request = hd_status_area_box_size_request;
+  widget_class->realize = hd_status_area_box_realize;
+  widget_class->unrealize = hd_status_area_box_unrealize;
 
   g_type_class_add_private (klass, sizeof (HDStatusAreaBoxPrivate));
 }
@@ -301,7 +345,7 @@ hd_status_area_box_init (HDStatusAreaBox *box)
 
   box->priv->children = NULL;
 
-  box->priv->max_visible_children = MAX_VISIBLE_CHILDREN;
+  box->priv->max_visible_children = MAX_VISIBLE_CHILDREN_LANDSCAPE;
 }
 
 GtkWidget *

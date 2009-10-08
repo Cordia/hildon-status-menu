@@ -75,6 +75,8 @@ struct _HDStatusAreaPrivate
 
   GtkWidget *clock_box;
 
+  GtkWidget *main_alignment;
+
   gboolean resize_after_map;
 };
 
@@ -96,7 +98,7 @@ static void
 hd_status_area_init (HDStatusArea *status_area)
 {
   HDStatusAreaPrivate *priv = HD_STATUS_AREA_GET_PRIVATE (status_area);
-  GtkWidget *main_alignment, *left_alignment, *main_hbox, *left_hbox, *special_hbox;
+  GtkWidget *left_alignment, *main_hbox, *left_hbox, *special_hbox;
   guint i;
 
   /* Set priv member */
@@ -109,11 +111,8 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_set_app_paintable (GTK_WIDGET (status_area), TRUE);
   gtk_widget_set_size_request (GTK_WIDGET (status_area), -1, STATUS_AREA_HEIGHT);
 
-  main_alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_alignment_set_padding (GTK_ALIGNMENT (main_alignment),
-                             CUSTOM_MARGIN_9, CUSTOM_MARGIN_9,
-                             HILDON_MARGIN_DOUBLE, HILDON_MARGIN_DOUBLE);
-  gtk_widget_show (main_alignment);
+  priv->main_alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+  gtk_widget_show (priv->main_alignment);
 
   left_alignment = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
   gtk_alignment_set_padding (GTK_ALIGNMENT (left_alignment),
@@ -147,8 +146,8 @@ hd_status_area_init (HDStatusArea *status_area)
   gtk_widget_show (priv->icon_box);
 
   /* Pack widgets */
-  gtk_container_add (GTK_CONTAINER (status_area), main_alignment);
-  gtk_container_add (GTK_CONTAINER (main_alignment), main_hbox);
+  gtk_container_add (GTK_CONTAINER (status_area), priv->main_alignment);
+  gtk_container_add (GTK_CONTAINER (priv->main_alignment), main_hbox);
   gtk_box_pack_start (GTK_BOX (main_hbox), left_alignment, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (left_alignment), left_hbox);
   gtk_box_pack_start (GTK_BOX (left_hbox), priv->clock_box, FALSE, FALSE, 0);
@@ -462,6 +461,33 @@ hd_status_area_expose_event (GtkWidget *widget,
                                                                        event);
 }
 
+static gboolean
+is_portrait_mode (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+
+  return gdk_screen_get_height (screen) > gdk_screen_get_width (screen);
+}
+
+static void
+update_alignemnt_padding (HDStatusArea *status_area)
+{
+  HDStatusAreaPrivate *priv = status_area->priv;
+  gboolean portrait = is_portrait_mode (GTK_WIDGET (status_area));
+  guint left_right_padding;
+
+  if (portrait)
+    left_right_padding = HILDON_MARGIN_DEFAULT;
+  else
+    left_right_padding = HILDON_MARGIN_DOUBLE;
+
+  gtk_alignment_set_padding (GTK_ALIGNMENT (priv->main_alignment),
+                             CUSTOM_MARGIN_9, CUSTOM_MARGIN_9,
+                             left_right_padding, left_right_padding);
+}
+
 static void
 hd_status_area_realize (GtkWidget *widget)
 {
@@ -474,6 +500,11 @@ hd_status_area_realize (GtkWidget *widget)
   screen = gtk_widget_get_screen (widget);
   gtk_widget_set_colormap (widget,
                            gdk_screen_get_rgba_colormap (screen));
+
+  g_signal_connect_swapped (screen, "size-changed",
+                            G_CALLBACK (update_alignemnt_padding),
+                            widget);
+  update_alignemnt_padding (HD_STATUS_AREA (widget));
 
   gtk_widget_set_app_paintable (widget,
                                 TRUE);
@@ -505,6 +536,20 @@ hd_status_area_realize (GtkWidget *widget)
 
   gdk_window_set_back_pixmap (widget->window, pixmap, FALSE);
 }
+
+static void
+hd_status_area_unrealize (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+  g_signal_handlers_disconnect_by_func (screen,
+                                        update_alignemnt_padding,
+                                        HD_STATUS_AREA (widget));
+
+  GTK_WIDGET_CLASS (hd_status_area_parent_class)->unrealize (widget);
+}
+
 
 static void
 hd_status_area_map (GtkWidget *widget)
@@ -594,6 +639,7 @@ hd_status_area_class_init (HDStatusAreaClass *klass)
   object_class->set_property = hd_status_area_set_property;
 
   widget_class->realize = hd_status_area_realize;
+  widget_class->unrealize = hd_status_area_unrealize;
   widget_class->map = hd_status_area_map;
   widget_class->expose_event = hd_status_area_expose_event;
 

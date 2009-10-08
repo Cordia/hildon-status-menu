@@ -1,3 +1,21 @@
+2009-10-08  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#134759 - Tighten the portrait status area UI
+
+	* src/hd-status-area-box.c (MAX_VISIBLE_CHILDREN_PORTRAIT,
+	  MAX_VISIBLE_CHILDREN_LANDSCAPE, hd_status_area_box_size_allocate,
+	  is_portrait_mode, hd_status_area_box_size_request,
+	  hd_status_area_box_realize, hd_status_area_box_unrealize,
+	  hd_status_area_box_class_init, hd_status_area_box_init): Only show 2
+	  additional icons when in portrait mode.
+	* src/hd-status-area.c (_HDStatusAreaPrivate::main_alignment,
+	  hd_status_area_init, hd_status_area_expose_event, is_portrait_mode,
+	  update_alignemnt_padding, hd_status_area_realize,
+	  hd_status_area_unrealize, hd_status_area_class_init): Change
+	  alignments based on portrait/landscape mode.
+
+	* debian/changelog: Update
+
 2009-09-08  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.24

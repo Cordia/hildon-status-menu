@@ -1,6 +1,7 @@
 hildon-status-menu (0.3.25~unreleased) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * NB#134759 - Tighten the portrait status area UI
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue,  8 Sep 2009 11:06:12 +0300
 
