@@ -1,3 +1,12 @@
+2009-10-13  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#137136 - MfE disappears from Status Bar
+
+	* src/status-menu.plugins.in: Update position of default status
+	menu/area items. Add default plugins to safe set.
+
+	* debian/changelog: Update
+
 2009-10-09  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.25
