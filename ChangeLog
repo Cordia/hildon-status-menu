@@ -1,5 +1,13 @@
 2009-10-14  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	Fixes: NB#142800 - To update the bluetooth icon on to status area it
+	is taking some time when the status area is filled with icons.
+
+	* src/hd-status-area.c (hd_status_area_check_resize): Always resize
+	the children.
+
+2009-10-14  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	Fixes: NB#142397 - Scroll bar is not indicating in status menu
 
 	* src/hd-status-menu.c (hd_status_menu_map): Move the status menu up
