@@ -59,7 +59,9 @@
 
 #define STATUS_MENU_ITEM_HEIGHT 70 /* Master Layout Guide */
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
-#define STATUS_MENU_PANNABLE_WIDTH 656
+
+#define STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE 656
+#define STATUS_MENU_PANNABLE_WIDTH_PORTRAIT 328
 
 #define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
 #define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
@@ -78,6 +80,8 @@ struct _HDStatusMenuPrivate
   HDPluginManager *plugin_manager;
 
   gboolean         pressed_outside;
+
+  gboolean         portrait;
 };
 
 #define HD_STATUS_MENU_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), HD_TYPE_STATUS_MENU, HDStatusMenuPrivate));
@@ -85,20 +89,27 @@ struct _HDStatusMenuPrivate
 G_DEFINE_TYPE (HDStatusMenu, hd_status_menu, GTK_TYPE_WINDOW);
 
 static void
-notify_visible_items_cb (GObject      *object,
-                         GParamSpec   *spec,
-                         HDStatusMenu *status_menu)
+notify_visible_items_cb (HDStatusMenu *status_menu)
 {
   HDStatusMenuPrivate *priv = status_menu->priv;
   guint visible_items;
 
-  g_object_get (object,
+  g_object_get (priv->box,
                 "visible-items", &visible_items,
                 NULL);
 
-  gtk_widget_set_size_request (priv->pannable,
-                               STATUS_MENU_PANNABLE_WIDTH,
-                               MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
+  if (priv->portrait)
+    {
+      gtk_widget_set_size_request (priv->pannable,
+                                   STATUS_MENU_PANNABLE_WIDTH_PORTRAIT,
+                                   MIN (MAX (visible_items, 1), 7) * STATUS_MENU_ITEM_HEIGHT);
+    }
+  else
+    {
+      gtk_widget_set_size_request (priv->pannable,
+                                   STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
+                                   MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
+    }
 }
 
 static DBusHandlerResult
@@ -148,8 +159,8 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   /* Create widgets */
   priv->box = hd_status_menu_box_new ();
-  g_signal_connect (G_OBJECT (priv->box), "notify::visible-items",
-                    G_CALLBACK (notify_visible_items_cb), status_menu);
+  g_signal_connect_swapped (G_OBJECT (priv->box), "notify::visible-items",
+                            G_CALLBACK (notify_visible_items_cb), status_menu);
   gtk_widget_show (priv->box);
 
   priv->pannable = hildon_pannable_area_new ();
@@ -162,7 +173,7 @@ hd_status_menu_init (HDStatusMenu *status_menu)
    * the number of visible items in the status menu box changed)
    */
   gtk_widget_set_size_request (priv->pannable,
-                               STATUS_MENU_PANNABLE_WIDTH,
+                               STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
                                STATUS_MENU_ITEM_HEIGHT);
   gtk_widget_show (priv->pannable);
 
@@ -181,6 +192,9 @@ hd_status_menu_init (HDStatusMenu *status_menu)
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
+
+  hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
+                                        HILDON_PORTRAIT_MODE_SUPPORT);
 }
 
 static void
@@ -321,11 +335,45 @@ hd_status_menu_set_property (GObject      *object,
     }
 }
 
+static gboolean
+is_portrait_mode (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+
+  return gdk_screen_get_height (screen) > gdk_screen_get_width (screen);
+}
+
+static void
+update_portrait (HDStatusMenu *status_menu)
+{
+  HDStatusMenuPrivate *priv = status_menu->priv;
+
+  priv->portrait = is_portrait_mode (GTK_WIDGET (status_menu));
+
+  g_object_set (priv->box,
+                "columns", priv->portrait ? 1 : 2,
+                NULL);
+
+  notify_visible_items_cb (status_menu);
+
+  hildon_pannable_area_jump_to (HILDON_PANNABLE_AREA (priv->pannable),
+                                0, 0);
+}
+
 static void
 hd_status_menu_realize (GtkWidget *widget)
 {
+  GdkScreen *screen;
   GdkDisplay *display;
   Atom atom, wm_type;
+
+  screen = gtk_widget_get_screen (widget);
+  g_signal_connect_swapped (screen, "size-changed",
+                            G_CALLBACK (update_portrait),
+                            widget);
+  update_portrait (HD_STATUS_MENU (widget));
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->realize (widget);
 
@@ -346,6 +394,19 @@ hd_status_menu_realize (GtkWidget *widget)
 }
 
 static void
+hd_status_menu_unrealize (GtkWidget *widget)
+{
+  GdkScreen *screen;
+
+  screen = gtk_widget_get_screen (widget);
+  g_signal_handlers_disconnect_by_func (screen,
+                                        update_portrait,
+                                        HD_STATUS_MENU (widget));
+
+  GTK_WIDGET_CLASS (hd_status_menu_parent_class)->unrealize (widget);
+}
+
+static void
 hd_status_menu_map (GtkWidget *widget)
 {
   HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
@@ -354,9 +415,15 @@ hd_status_menu_map (GtkWidget *widget)
 
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->map (widget);
 
+  update_portrait (HD_STATUS_MENU (widget));
+
+  if (priv->portrait)
+    window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT + 2 * HILDON_MARGIN_DOUBLE;
+  else
+    window_width = STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE + 2 * HILDON_MARGIN_DOUBLE;
+
   /* Horizontally center menu */
   screen = gtk_widget_get_screen (widget);
-  gtk_window_get_size (GTK_WINDOW (widget), &window_width, NULL);
   gtk_window_move (GTK_WINDOW (widget), (gdk_screen_get_width (screen) - window_width) / 2, 0);
 
   hildon_pannable_area_jump_to (HILDON_PANNABLE_AREA (priv->pannable),
@@ -425,6 +492,7 @@ hd_status_menu_class_init (HDStatusMenuClass *klass)
   object_class->set_property = hd_status_menu_set_property;
 
   widget_class->realize = hd_status_menu_realize;
+  widget_class->unrealize = hd_status_menu_unrealize;
   widget_class->map = hd_status_menu_map;
 
   container_class->check_resize = hd_status_menu_check_resize;

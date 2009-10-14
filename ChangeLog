@@ -1,5 +1,12 @@
 2009-10-14  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	Fixes: NB#142949 - Active status area also in portrait
+
+	* src/hd-status-menu-box.c: Add support for one or two columns.
+	* src/hd-status-menu.c: Add support for portrait mode status menu.
+
+2009-10-14  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	Fixes: NB#142800 - To update the bluetooth icon on to status area it
 	is taking some time when the status area is filled with icons.
 

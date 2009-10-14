@@ -34,6 +34,7 @@ struct _HDStatusMenuBoxPrivate
   GList *children;
 
   guint visible_items;
+  guint columns;
 };
 
 
@@ -47,7 +48,8 @@ struct _HDStatusMenuBoxChild
 enum
 {
   PROP_0,
-  PROP_VISIBLE_ITEMS
+  PROP_VISIBLE_ITEMS,
+  PROP_COLUMNS
 };
  
 G_DEFINE_TYPE (HDStatusMenuBox, hd_status_menu_box, GTK_TYPE_CONTAINER);
@@ -64,6 +66,30 @@ hd_status_menu_box_get_property (GObject      *object,
     {
     case PROP_VISIBLE_ITEMS:
       g_value_set_uint (value, priv->visible_items);
+      break;
+
+    case PROP_COLUMNS:
+      g_value_set_uint (value, priv->columns);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+hd_status_menu_box_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  HDStatusMenuBoxPrivate *priv = HD_STATUS_MENU_BOX (object)->priv;
+
+  switch (prop_id)
+    {
+    case PROP_COLUMNS:
+      priv->columns = g_value_get_uint (value);
+      gtk_widget_queue_resize (GTK_WIDGET (object));
       break;
 
     default:
@@ -193,7 +219,7 @@ hd_status_menu_box_size_allocate (GtkWidget     *widget,
   GTK_WIDGET_CLASS (hd_status_menu_box_parent_class)->size_allocate (widget,
                                                                      allocation);
 
-  child_allocation.width = allocation->width / 2 - border_width;
+  child_allocation.width = (allocation->width - (2 * border_width)) / priv->columns;
   child_allocation.height = ITEM_HEIGHT;
 
   /* place the visible children */
@@ -205,8 +231,8 @@ hd_status_menu_box_size_allocate (GtkWidget     *widget,
       if (!GTK_WIDGET_VISIBLE (info->widget))
         continue;
 
-      child_allocation.x = allocation->x + border_width + (visible_children % 2 * child_allocation.width);
-      child_allocation.y = allocation->y + border_width + (visible_children / 2 * ITEM_HEIGHT);
+      child_allocation.x = allocation->x + border_width + (visible_children % priv->columns * child_allocation.width);
+      child_allocation.y = allocation->y + border_width + (visible_children / priv->columns * ITEM_HEIGHT);
 
       gtk_widget_size_allocate (info->widget, &child_allocation);
 
@@ -252,7 +278,7 @@ hd_status_menu_box_size_request (GtkWidget      *widget,
   /* width is always two columns */
   requisition->width = 10; // 2 * ITEM_WIDTH + 2 * border_width;
   /* height is at least one row */
-  requisition->height = MAX ((visible_children + 1) / 2, 1) * ITEM_HEIGHT + 2 * border_width;
+  requisition->height = MAX ((visible_children + (priv->columns - 1)) / priv->columns, 1) * ITEM_HEIGHT + 2 * border_width;
 }
 
 static void
@@ -263,6 +289,7 @@ hd_status_menu_box_class_init (HDStatusMenuBoxClass *klass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class->get_property = hd_status_menu_box_get_property;
+  object_class->set_property = hd_status_menu_box_set_property;
 
   container_class->add = hd_status_menu_box_add;
   container_class->remove = hd_status_menu_box_remove;
@@ -283,6 +310,15 @@ hd_status_menu_box_class_init (HDStatusMenuBoxClass *klass)
                                                       G_MAXUINT,
                                                       0,
                                                       G_PARAM_READABLE));
+  g_object_class_install_property (object_class,
+                                   PROP_COLUMNS,
+                                   g_param_spec_uint ("columns",
+                                                      "Columns",
+                                                      "Number of columns",
+                                                      1,
+                                                      G_MAXUINT,
+                                                      2,
+                                                      G_PARAM_READABLE | G_PARAM_WRITABLE | G_PARAM_CONSTRUCT));
 
   g_type_class_add_private (klass, sizeof (HDStatusMenuBoxPrivate));
 }
@@ -292,11 +328,13 @@ hd_status_menu_box_init (HDStatusMenuBox *box)
 {
   GTK_WIDGET_SET_FLAGS (box, GTK_NO_WINDOW);
   gtk_widget_set_redraw_on_allocate (GTK_WIDGET (box),
-                                     FALSE);
+                                     TRUE);
 
   box->priv = G_TYPE_INSTANCE_GET_PRIVATE ((box), HD_TYPE_STATUS_MENU_BOX, HDStatusMenuBoxPrivate);
 
   box->priv->children = NULL;
+
+  box->priv->columns = 2;
 }
 
 GtkWidget *
