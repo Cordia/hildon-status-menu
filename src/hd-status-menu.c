@@ -348,6 +348,7 @@ hd_status_menu_realize (GtkWidget *widget)
 static void
 hd_status_menu_map (GtkWidget *widget)
 {
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
   GdkScreen *screen;
   gint window_width;
 
@@ -357,6 +358,9 @@ hd_status_menu_map (GtkWidget *widget)
   screen = gtk_widget_get_screen (widget);
   gtk_window_get_size (GTK_WINDOW (widget), &window_width, NULL);
   gtk_window_move (GTK_WINDOW (widget), (gdk_screen_get_width (screen) - window_width) / 2, 0);
+
+  hildon_pannable_area_jump_to (HILDON_PANNABLE_AREA (priv->pannable),
+                                0, 0);
 }
 
 static void

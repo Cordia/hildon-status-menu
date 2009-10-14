@@ -1,3 +1,10 @@
+2009-10-14  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#142397 - Scroll bar is not indicating in status menu
+
+	* src/hd-status-menu.c (hd_status_menu_map): Move the status menu up
+	to the first item again and show the panning indicator.
+
 2009-10-14  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.26
