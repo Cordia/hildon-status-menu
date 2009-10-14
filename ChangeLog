@@ -1,3 +1,8 @@
+2009-10-14  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.3.26
+	* configure.ac: 0.3.26
+
 2009-10-13  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Fixes: NB#137136 - MfE disappears from Status Bar
