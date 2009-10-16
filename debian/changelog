@@ -1,11 +1,11 @@
-hildon-status-menu (0.3.27~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.27) unstable; urgency=low
 
   Jan Arne:
   * NB#142800 - To update the bluetooth icon on to status area it is taking
     some time when the status area is filled with icons.
   * NB#142397 - Scroll bar is not indicating in status menu
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed, 14 Oct 2009 10:15:57 +0300
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 16 Oct 2009 09:05:32 +0300
 
 hildon-status-menu (0.3.26) unstable; urgency=low
 
