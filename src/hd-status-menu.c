@@ -193,8 +193,10 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
 
-  hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
-                                        HILDON_PORTRAIT_MODE_SUPPORT);
+/* Disable portrait mode for now.
+ *
+ * hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
+                                        HILDON_PORTRAIT_MODE_SUPPORT);*/
 }
 
 static void
