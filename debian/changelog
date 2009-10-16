@@ -1,6 +1,7 @@
-hildon-status-menu (0.3.28~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.28) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * Disabled the portrait mode.
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 16 Oct 2009 09:06:59 +0300
 
