@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.28~unreleased) unstable; urgency=low
+
+  * foo
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 16 Oct 2009 09:06:59 +0300
+
 hildon-status-menu (0.3.27) unstable; urgency=low
 
   Jan Arne:
