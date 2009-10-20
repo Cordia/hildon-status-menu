@@ -72,12 +72,21 @@ X-Status-Menu-Position=12
 
 [as-status-applet.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/as-status-applet.desktop
+X-Status-Area-Position=12
+X-Status-Menu-Position=14
 
 [fmtx.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/fmtx.desktop
+X-Status-Area-Position=13
+X-Status-Menu-Position=15
 
 [bluetooth-headset.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/bluetooth-headset.desktop
+X-Status-Area-Position=14
+X-Status-Menu-Position=16
 
 [connui-bluetooth-transfer.desktop]
 X-Desktop-File=@hildonstatusmenudesktopentrydir@/connui-bluetooth-transfer.desktop
+X-Status-Area-Position=15
+X-Status-Menu-Position=17
+

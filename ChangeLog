@@ -1,3 +1,10 @@
+2009-10-20  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Update priorities for plugins.
+
+	* src/status-menu.plugins.in: Update priorities for default plugins
+	according to Status Area UI spec 2.4.
+
 2009-10-16  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.28
