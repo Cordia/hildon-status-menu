@@ -67,6 +67,8 @@ struct _HDStatusAreaPrivate
 {
   HDPluginManager *plugin_manager;
 
+  GList *status_plugins;
+
   GtkWidget *status_menu;
 
   GtkWidget *icon_box;
@@ -94,6 +96,41 @@ button_press_event_cb (GtkWidget      *widget,
   return TRUE;
 }
 
+static gboolean
+configure_event_cb (GtkWidget         *widget,
+                    GdkEventConfigure *event,
+                    gpointer           user_data)
+{
+  HDStatusArea *status_area;
+  HDStatusAreaPrivate *priv;
+  GList *l;
+
+  g_return_val_if_fail (HD_IS_STATUS_AREA (widget), FALSE);
+
+  status_area = HD_STATUS_AREA (widget);
+  priv = status_area->priv;
+
+  /* inform status area plugins if the status area is obscured or not */
+  for (l = priv->status_plugins; l; l = l->next)
+    {
+      GdkWindow *window;
+      gint x, y, width, height;
+
+      window = gtk_widget_get_window (GTK_WIDGET (status_area));
+      gdk_window_get_root_origin (window, &x, &y);
+      gdk_window_get_geometry (window, NULL, NULL, &width, &height, NULL);
+
+      /* the compositor moves obscured windows off the screen, so we can use
+       * that to determine whether the status area is visible */
+      if ((x + width > 0) && (y + height > 0))
+        g_object_set (l->data, "status-area-visible", TRUE, NULL);
+      else
+        g_object_set (l->data, "status-area-visible", FALSE, NULL);
+    }
+
+  return FALSE;
+}
+
 static void
 hd_status_area_init (HDStatusArea *status_area)
 {
@@ -103,6 +140,7 @@ hd_status_area_init (HDStatusArea *status_area)
 
   /* Set priv member */
   status_area->priv = priv;
+  priv->status_plugins = NULL;
 
   /* Create Status area UI */
   gtk_widget_add_events (GTK_WIDGET (status_area), GDK_BUTTON_PRESS_MASK);
@@ -155,6 +193,11 @@ hd_status_area_init (HDStatusArea *status_area)
   for (i = 0; i < HD_STATUS_AREA_NUM_SPECIAL_ITEMS; i++)
     gtk_box_pack_start (GTK_BOX (special_hbox), priv->special_item_image[i], FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), priv->icon_box, TRUE, TRUE, 0);
+
+  /* Detect when the entire status area is moved off screen (this happens when a
+   * program is full-screen) */
+  g_signal_connect (G_OBJECT (status_area), "configure-event",
+                    G_CALLBACK (configure_event_cb), status_area);
 }
 
 static GObject *
@@ -323,6 +366,7 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
                                position);
     }
 
+  priv->status_plugins = g_list_prepend (priv->status_plugins, plugin);
   g_signal_connect (plugin, "notify::status-area-icon",
                     G_CALLBACK (status_area_icon_changed), NULL);
   status_area_icon_changed (HD_STATUS_PLUGIN_ITEM (plugin));
@@ -366,6 +410,7 @@ hd_status_area_plugin_removed_cb (HDPluginManager *plugin_manager,
                              priv->clock_box);
     }
 
+  priv->status_plugins = g_list_remove (priv->status_plugins, plugin);
   g_object_unref (plugin);
 }
 

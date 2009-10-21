@@ -1,6 +1,8 @@
 hildon-status-menu (0.3.29~unreleased) unstable; urgency=low
 
-  * foo
+  Travis Reitter:
+  * NB#141707 - API for status area applets to detect if they are invisible is
+    absent.
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri, 16 Oct 2009 13:00:54 +0300
 
