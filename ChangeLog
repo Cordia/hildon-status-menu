@@ -1,10 +1,15 @@
+2009-10-26  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
+
+	Released 0.3.29
+	* configure.ac: 0.3.29
+
 2009-10-21  Travis Reitter  <travis.reitter@collabora.co.uk>
 
 	Fixes: NB#141707 - API for status area applets to detect if they are
 	invisible is absent.
 
-	* src/hd-status-area.c: Change the "status-area-visible" property of plugins
-	when the status area gets obscured or unobscured.
+	* src/hd-status-area.c: Change the "status-area-visible" property of
+	plugins when the status area gets obscured or unobscured.
 
 2009-10-20  Jan Arne Petersen  <jpetersen@openismus.com>
 
