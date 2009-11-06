@@ -1,3 +1,11 @@
+2009-11-06  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#144988 - increase in memory usage of hildon-status-menu
+	while changing theme.
+
+	* src/hildon-status-menu.c: Restart hildon-status-menu on theme
+	change.
+
 2009-10-26  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Released 0.3.29
