@@ -1,8 +1,10 @@
-hildon-status-menu (0.3.30~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.30) unstable; urgency=low
 
-  * foo
+  Jan Arne:
+  * Fixes: NB#144988 - increase in memory usage of hildon-status-menu while
+    changing theme.
 
- -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Mon, 26 Oct 2009 10:47:00 +0200
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Fri,  6 Nov 2009 13:13:22 +0100
 
 hildon-status-menu (0.3.29) unstable; urgency=low
 

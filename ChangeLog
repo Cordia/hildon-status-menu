@@ -1,5 +1,9 @@
 2009-11-06  Jan Arne Petersen  <jpetersen@openismus.com>
 
+	Release 0.3.30.
+
+2009-11-06  Jan Arne Petersen  <jpetersen@openismus.com>
+
 	Fixes: NB#144988 - increase in memory usage of hildon-status-menu
 	while changing theme.
 
