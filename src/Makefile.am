@@ -20,7 +20,11 @@ hildon_status_menu_SOURCES = \
 	hd-status-menu.c							\
 	hd-status-menu.h							\
 	hd-status-menu-box.c							\
-	hd-status-menu-box.h
+	hd-status-menu-box.h							\
+	hd-desktop.c								\
+	hd-desktop.h								\
+	hd-display.c								\
+	hd-display.h
 
 hildon_status_menu_LDFLAGS = \
 	$(HILDON_LIBS)	    							\

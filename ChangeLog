@@ -1,3 +1,25 @@
+2009-11-22  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#141707 - API for status area applets to detect if they are
+	invisible is absent.
+
+	* src/hd-desktop.c:
+	* src/hd-desktop.h: Add HDDesktop class to track changes in the
+	visible window (task switcher).
+
+	* src/hd-display.c:
+	* src/hd-display.h: Add HDDisplay class to track changes in the mce
+	display state.
+
+	* src/Makefile.am: Add new files.
+
+	* src/hd-status-area.c: Take current display and desktop state in
+	account for satting the status-area-visible property on plugins.
+
+	* src/hildon-status-menu.c: Revert restart on theme change.
+
+	Release 0.3.31.
+
 2009-11-06  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Release 0.3.30.

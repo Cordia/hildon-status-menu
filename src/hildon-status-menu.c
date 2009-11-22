@@ -28,7 +28,6 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include <libhildondesktop/libhildondesktop.h>
 #include <hildon/hildon.h>
-#include <gdk/gdkx.h>
 
 #include <libintl.h>
 #include <locale.h>
@@ -111,41 +110,6 @@ console_quiet(void)
     g_warning ("%s: failed opening /dev/null write-only", __func__);
 }
 
-static GdkFilterReturn
-theme_changed_event_filter (GdkXEvent *xevent,
-                            GdkEvent *event,
-                            gpointer data)
-{
-  XEvent *ev = (XEvent *) xevent;
-
-  if (ev->type == PropertyNotify)
-    {
-      if (ev->xproperty.atom == gdk_x11_get_xatom_by_name ("_MB_THEME"))
-        {
-          /* Restart on theme change */
-          gtk_main_quit ();
-        }
-    }
-
-  return GDK_FILTER_CONTINUE;
-}
-
-static void
-monitor_root_window_for_property_changes (void)
-{
-  GdkWindow *root_win;
-
-  root_win = gdk_window_foreign_new_for_display (gdk_display_get_default (),
-                                                 gdk_x11_get_default_root_xwindow ());
-  gdk_window_set_events (root_win,
-                         gdk_window_get_events (root_win) |
-                         GDK_PROPERTY_CHANGE_MASK);
-
-  gdk_window_add_filter (root_win,
-                         theme_changed_event_filter,
-                         NULL);
-}
-
 int
 main (int argc, char **argv)
 {
@@ -187,8 +151,6 @@ main (int argc, char **argv)
                                             load_priority_func,
                                             NULL,
                                             NULL);
-
-  monitor_root_window_for_property_changes ();
 
   /* Create simple window to show the Status Menu 
    */

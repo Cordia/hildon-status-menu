@@ -31,6 +31,9 @@
 
 #include <string.h>
 
+#include "hd-desktop.h"
+#include "hd-display.h"
+
 #include "hd-status-area-box.h"
 #include "hd-status-menu.h"
 #include "hd-status-menu-config.h"
@@ -67,6 +70,8 @@ struct _HDStatusAreaPrivate
 {
   HDPluginManager *plugin_manager;
 
+  HDDesktop *desktop;
+  HDDisplay *display;
   GList *status_plugins;
 
   GtkWidget *status_menu;
@@ -79,7 +84,8 @@ struct _HDStatusAreaPrivate
 
   GtkWidget *main_alignment;
 
-  gboolean resize_after_map;
+  gboolean resize_after_map : 1;
+  gboolean status_area_visible : 1;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -97,36 +103,53 @@ button_press_event_cb (GtkWidget      *widget,
 }
 
 static gboolean
+is_widget_on_screen (GtkWidget *widget)
+{
+  GdkWindow *window;
+  gint x, y, width, height;
+
+  window = gtk_widget_get_window (widget);
+  gdk_window_get_root_origin (window, &x, &y);
+  gdk_window_get_geometry (window, NULL, NULL, &width, &height, NULL);
+
+  /* the compositor moves obscured windows off the screen, so we can use
+   * that to determine whether the status area is visible */
+  return (x + width > 0) && (y + height > 0);
+}
+
+static void
+update_status_area_visibility (HDStatusArea *status_area)
+{
+  HDStatusAreaPrivate *priv = status_area->priv;
+  gboolean visible;
+  GList *l;
+
+  visible = (is_widget_on_screen (GTK_WIDGET (status_area)) &&
+             !hd_desktop_is_task_switcher_visible (priv->desktop) &&
+             hd_display_is_on (priv->display));
+
+  if (visible != priv->status_area_visible)
+    {
+      priv->status_area_visible = visible;
+
+      /* inform status area plugins if the status area is obscured or not */
+      for (l = priv->status_plugins; l; l = l->next)
+        {
+          g_object_set (l->data, "status-area-visible", visible, NULL);
+        }
+    }
+}
+
+static gboolean
 configure_event_cb (GtkWidget         *widget,
                     GdkEventConfigure *event,
                     gpointer           user_data)
 {
   HDStatusArea *status_area;
-  HDStatusAreaPrivate *priv;
-  GList *l;
-
-  g_return_val_if_fail (HD_IS_STATUS_AREA (widget), FALSE);
 
   status_area = HD_STATUS_AREA (widget);
-  priv = status_area->priv;
 
-  /* inform status area plugins if the status area is obscured or not */
-  for (l = priv->status_plugins; l; l = l->next)
-    {
-      GdkWindow *window;
-      gint x, y, width, height;
-
-      window = gtk_widget_get_window (GTK_WIDGET (status_area));
-      gdk_window_get_root_origin (window, &x, &y);
-      gdk_window_get_geometry (window, NULL, NULL, &width, &height, NULL);
-
-      /* the compositor moves obscured windows off the screen, so we can use
-       * that to determine whether the status area is visible */
-      if ((x + width > 0) && (y + height > 0))
-        g_object_set (l->data, "status-area-visible", TRUE, NULL);
-      else
-        g_object_set (l->data, "status-area-visible", FALSE, NULL);
-    }
+  update_status_area_visibility (status_area);
 
   return FALSE;
 }
@@ -140,6 +163,16 @@ hd_status_area_init (HDStatusArea *status_area)
 
   /* Set priv member */
   status_area->priv = priv;
+
+  priv->desktop = hd_desktop_get ();
+  g_signal_connect_swapped (priv->desktop, "task-switcher-show",
+                            G_CALLBACK (update_status_area_visibility), status_area);
+  g_signal_connect_swapped (priv->desktop, "task-switcher-hide",
+                            G_CALLBACK (update_status_area_visibility), status_area);
+  priv->display = hd_display_get ();
+  g_signal_connect_swapped (priv->display, "display-status-changed",
+                            G_CALLBACK (update_status_area_visibility), status_area);
+
   priv->status_plugins = NULL;
 
   /* Create Status area UI */
@@ -222,10 +255,27 @@ hd_status_area_constructor (GType                  type,
 static void
 hd_status_area_dispose (GObject *object)
 {
-  HDStatusAreaPrivate *priv = HD_STATUS_AREA (object)->priv;
+  HDStatusArea *status_area = HD_STATUS_AREA (object);
+  HDStatusAreaPrivate *priv = status_area->priv;
 
   if (priv->plugin_manager)
     priv->plugin_manager = (g_object_unref (priv->plugin_manager), NULL);
+
+  if (priv->desktop)
+    {
+      g_signal_handlers_disconnect_by_func (priv->desktop,
+                                            update_status_area_visibility,
+                                            status_area);
+      priv->desktop = (g_object_unref (priv->desktop), NULL);
+    }
+
+  if (priv->display)
+    {
+      g_signal_handlers_disconnect_by_func (priv->display,
+                                            update_status_area_visibility,
+                                            status_area);
+      priv->display = (g_object_unref (priv->display), NULL);
+    }
 
   G_OBJECT_CLASS (hd_status_area_parent_class)->dispose (object);
 }
