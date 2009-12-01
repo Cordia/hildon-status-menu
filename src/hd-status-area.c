@@ -85,7 +85,7 @@ struct _HDStatusAreaPrivate
   GtkWidget *main_alignment;
 
   gboolean resize_after_map : 1;
-  gboolean status_area_visible : 1;
+  gboolean status_area_visible;
 };
 
 G_DEFINE_TYPE (HDStatusArea, hd_status_area, GTK_TYPE_WINDOW);
@@ -172,6 +172,7 @@ hd_status_area_init (HDStatusArea *status_area)
   priv->display = hd_display_get ();
   g_signal_connect_swapped (priv->display, "display-status-changed",
                             G_CALLBACK (update_status_area_visibility), status_area);
+  update_status_area_visibility (status_area);
 
   priv->status_plugins = NULL;
 
@@ -417,6 +418,8 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
     }
 
   priv->status_plugins = g_list_prepend (priv->status_plugins, plugin);
+  g_object_set (plugin, "status-area-visible", priv->status_area_visible, NULL);
+
   g_signal_connect (plugin, "notify::status-area-icon",
                     G_CALLBACK (status_area_icon_changed), NULL);
   status_area_icon_changed (HD_STATUS_PLUGIN_ITEM (plugin));

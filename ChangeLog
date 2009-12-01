@@ -1,3 +1,18 @@
+2009-12-01  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Release 0.3.32.
+
+2009-12-01  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Fixes: NB#141707 - API for status area applets to detect if they are
+	invisible is absent.
+
+	* src/hd-display.c (hd_display_init): Display is on by default.
+
+	* src/hd-status-area.c (_HDStatusAreaPrivate::status_area_visible,
+	  hd_status_area_init, hd_status_area_plugin_added_cb): Initial set
+	  the status area visibility.
+
 2009-11-22  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Fixes: NB#141707 - API for status area applets to detect if they are

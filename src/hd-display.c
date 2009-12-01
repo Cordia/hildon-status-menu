@@ -102,6 +102,8 @@ hd_display_init (HDDisplay *display)
 {
   display->priv = HD_DISPLAY_GET_PRIVATE (display);
 
+  display->priv->display_on = TRUE;
+
   initialize_system_dbus (display);
 }
 
