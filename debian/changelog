@@ -1,3 +1,11 @@
+hildon-status-menu (0.3.33) unstable; urgency=low
+
+  Jan Arne:
+  * Fixes: NB#149134 - Remove doc files from status-menu deb
+  * Fixes: NB#142949 - Active status area also in portrait
+
+ -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Wed,  9 Dec 2009 11:28:44 +0100
+
 hildon-status-menu (0.3.32) unstable; urgency=low
 
   Jan Arne:
