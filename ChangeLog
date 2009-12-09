@@ -1,3 +1,12 @@
+2009-12-09  Jan Arne Petersen  <jpetersen@openismus.com>
+
+	Enable status menu in portrait mode.
+
+	Fixes: NB#142949 - Active status area also in portrait
+
+	* src/hd-status-menu.c (notify_visible_items_cb, hd_status_menu_init):
+	Enable status menu in portrait mode.
+
 2009-12-03  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Do not install /usr/share/doc files.

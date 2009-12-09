@@ -102,7 +102,7 @@ notify_visible_items_cb (HDStatusMenu *status_menu)
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_PORTRAIT,
-                                   MIN (MAX (visible_items, 1), 7) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX (visible_items, 1), 8) * STATUS_MENU_ITEM_HEIGHT);
     }
   else
     {
@@ -193,10 +193,8 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
 
-/* Disable portrait mode for now.
- *
- * hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
-                                        HILDON_PORTRAIT_MODE_SUPPORT);*/
+  hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
+                                        HILDON_PORTRAIT_MODE_SUPPORT);
 }
 
 static void
