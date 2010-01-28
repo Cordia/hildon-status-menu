@@ -53,10 +53,6 @@
  *
  **/
 
-/* FIXME Use the pixel sizes from the layout guide  */
-#define STATUS_MENU_INNER_BORDER 4
-#define STATUS_MENU_EXTERNAL_BORDER 40
-
 #define STATUS_MENU_ITEM_HEIGHT 70 /* Master Layout Guide */
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
 
@@ -184,9 +180,6 @@ hd_status_menu_init (HDStatusMenu *status_menu)
   hildon_pannable_area_add_with_viewport (HILDON_PANNABLE_AREA (priv->pannable), priv->box); 
   gtk_container_add (GTK_CONTAINER (alignment), priv->pannable);
   gtk_container_add (GTK_CONTAINER (status_menu), alignment);
-
-  /* Set border */
-  gtk_container_set_border_width (GTK_CONTAINER (status_menu), HILDON_MARGIN_DOUBLE);
 
   g_signal_connect (status_menu, "delete-event",
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
