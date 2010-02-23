@@ -411,9 +411,9 @@ hd_status_menu_map (GtkWidget *widget)
   update_portrait (HD_STATUS_MENU (widget));
 
   if (priv->portrait)
-    window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT + 2 * HILDON_MARGIN_DOUBLE;
+    window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;
   else
-    window_width = STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE + 2 * HILDON_MARGIN_DOUBLE;
+    window_width = STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE;
 
   /* Horizontally center menu */
   screen = gtk_widget_get_screen (widget);

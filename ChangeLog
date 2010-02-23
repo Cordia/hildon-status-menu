@@ -1,3 +1,10 @@
+2010-02-23  Gordon Williams <gordon.williams@collabora.co.uk>
+
+	Bug 157390 - Regression: application menu borders missing
+
+	* src/hd-status-menu.c: Make sure centring code doesn't assume that
+	the menu has a border.
+
 2010-01-28  Jan Arne Petersen  <jpetersen@openismus.com>
 
 	Fixes NB#137235 for status menu.
