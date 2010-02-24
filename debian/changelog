@@ -1,7 +1,8 @@
-hildon-status-menu (0.3.34~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.34) unstable; urgency=low
 
-  Jan Arne:
-  * Fixes NB#137235 for status menu.
+  Gordon:
+  * Fixes: NB#158114 - When starting device with beta theme, menu borders
+    are from devel theme
 
  -- Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>  Tue, 23 Feb 2010 17:15:56 +0200
 
