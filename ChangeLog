@@ -1,3 +1,10 @@
+2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	NB#155459 Portrait status menu should be full-width
+
+	* src/hd-status-menu.c (STATUS_MENU_PANNABLE_WIDTH_PORTRAIT):
+	  Make it fullscreen-width.
+
 2010-02-24  Kimmo Hämäläinen <kimmo.hamalainen@nokia.com>
 
 	Release 0.3.34

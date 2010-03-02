@@ -57,7 +57,7 @@
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
 
 #define STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE 656
-#define STATUS_MENU_PANNABLE_WIDTH_PORTRAIT 328
+#define STATUS_MENU_PANNABLE_WIDTH_PORTRAIT 448
 
 #define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
 #define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
