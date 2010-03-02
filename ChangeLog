@@ -1,6 +1,11 @@
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
 	* src/hildon-status-menu (main):
+	  Remove silly debug messages.
+
+2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	* src/hildon-status-menu (main):
 	  Remove the tmp file when interrupted via SIGINT.
 
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>

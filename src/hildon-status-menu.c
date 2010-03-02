@@ -130,15 +130,11 @@ main (int argc, char **argv)
   signal (SIGTERM, signal_handler);
   signal (SIGINT, signal_handler);
 
+  if (getenv ("DEBUG_OUTPUT") == NULL)
+    console_quiet ();
+
   /* Setup Stamp File */
   hd_stamp_file_init (HD_STATUS_MENU_STAMP_FILE);
-
-  if (getenv ("DEBUG_OUTPUT") == NULL)
-    {
-      printf ("%s: console is quiet, define DEBUG_OUTPUT to prevent this.\n",
-              argv[0]);
-      console_quiet ();
-    }
 
   /* Create a plugin manager instance */
   plugin_manager = hd_plugin_manager_new (
