@@ -1,5 +1,9 @@
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
+	Release 0.3.35
+
+2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
 	* src/hildon-status-menu (main):
 	  Remove silly debug messages.
 
