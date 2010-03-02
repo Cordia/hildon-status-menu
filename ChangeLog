@@ -1,5 +1,10 @@
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
+	* src/hildon-status-menu (main):
+	  Remove the tmp file when interrupted via SIGINT.
+
+2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
 	NB#155459 Portrait status menu should be full-width
 
 	* src/hd-status-menu.c (STATUS_MENU_PANNABLE_WIDTH_PORTRAIT):

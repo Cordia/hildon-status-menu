@@ -46,14 +46,11 @@
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
 
 /* signal handler, hildon-desktop sends SIGTERM to all tracked applications
- * when it receives SIGTEM itselgf */
+ * when it receives SIGTEM itself */
 static void
 signal_handler (int signal)
 {
-  if (signal == SIGTERM)
-  {
-    gtk_main_quit ();
-  }
+  gtk_main_quit ();
 }
 
 static guint
@@ -129,8 +126,9 @@ main (int argc, char **argv)
   /* Initialize GnomeVFS */
   gnome_vfs_init ();
 
-  /* Add handler for TERM signal */
+  /* Add handler for TERM and signals */
   signal (SIGTERM, signal_handler);
+  signal (SIGINT, signal_handler);
 
   /* Setup Stamp File */
   hd_stamp_file_init (HD_STATUS_MENU_STAMP_FILE);
