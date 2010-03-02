@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.36~unreleased) unstable; urgency=low
+
+  * :)
+
+ -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 02 Mar 2010 11:13:23 +0200
+
 hildon-status-menu (0.3.35) unstable; urgency=low
 
   * Fixes: NB#155459 - Portrait status menu should be full-width
