@@ -1,15 +1,23 @@
+2010-03-03  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	NB#159061 Part of HSM is truncated When the HSM is opened
+		  and switched to portrait mode.
+
+	* src/hd-status-menu.c (update_portrait):
+	  Re-center the window after rotation.
+
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
 	Release 0.3.35
 
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
-	* src/hildon-status-menu (main):
+	* src/hildon-status-menu.c (main):
 	  Remove silly debug messages.
 
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
-	* src/hildon-status-menu (main):
+	* src/hildon-status-menu.c (main):
 	  Remove the tmp file when interrupted via SIGINT.
 
 2010-03-02  Adam Endrodi <adam.endrodi@blumsoft.eu>
