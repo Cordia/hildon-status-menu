@@ -7,8 +7,9 @@ hildon-status-menu (0.3.36~unreleased) unstable; urgency=low
 hildon-status-menu (0.3.35) unstable; urgency=low
 
   * Fixes: NB#155459 - Portrait status menu should be full-width
+  * Fixes: NB#159061 - Part of HSM is truncated When the HSM is opened and switched to portrait mode.
 
- -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 02 Mar 2010 11:13:23 +0200
+ -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Wed, 03 Mar 2010 16:18:51 +0200
 
 hildon-status-menu (0.3.34) unstable; urgency=low
 
