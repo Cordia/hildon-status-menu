@@ -57,7 +57,7 @@
 #define STATUS_MENU_ITEM_WIDTH 332 /* menu items (Master Layout Guide) */
 
 #define STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE 656
-#define STATUS_MENU_PANNABLE_WIDTH_PORTRAIT 328
+#define STATUS_MENU_PANNABLE_WIDTH_PORTRAIT 448
 
 #define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
 #define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
@@ -342,8 +342,20 @@ static void
 update_portrait (HDStatusMenu *status_menu)
 {
   HDStatusMenuPrivate *priv = status_menu->priv;
+  GdkScreen *screen;
+  gint window_width;
 
   priv->portrait = is_portrait_mode (GTK_WIDGET (status_menu));
+
+  if (priv->portrait)
+    window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;
+  else
+    window_width = STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE;
+
+  /* Horizontally center menu */
+  screen = gtk_widget_get_screen (GTK_WIDGET (status_menu));
+  gtk_window_move (GTK_WINDOW (GTK_WIDGET (status_menu)),
+                   (gdk_screen_get_width (screen) - window_width) / 2, 0);
 
   g_object_set (priv->box,
                 "columns", priv->portrait ? 1 : 2,
@@ -402,25 +414,8 @@ hd_status_menu_unrealize (GtkWidget *widget)
 static void
 hd_status_menu_map (GtkWidget *widget)
 {
-  HDStatusMenuPrivate *priv = HD_STATUS_MENU (widget)->priv;
-  GdkScreen *screen;
-  gint window_width;
-
   GTK_WIDGET_CLASS (hd_status_menu_parent_class)->map (widget);
-
   update_portrait (HD_STATUS_MENU (widget));
-
-  if (priv->portrait)
-    window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;
-  else
-    window_width = STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE;
-
-  /* Horizontally center menu */
-  screen = gtk_widget_get_screen (widget);
-  gtk_window_move (GTK_WINDOW (widget), (gdk_screen_get_width (screen) - window_width) / 2, 0);
-
-  hildon_pannable_area_jump_to (HILDON_PANNABLE_AREA (priv->pannable),
-                                0, 0);
 }
 
 static void

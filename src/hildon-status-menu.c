@@ -46,14 +46,11 @@
 #define HD_STATUS_MENU_STAMP_FILE HD_STAMP_DIR "status-menu.stamp"
 
 /* signal handler, hildon-desktop sends SIGTERM to all tracked applications
- * when it receives SIGTEM itselgf */
+ * when it receives SIGTEM itself */
 static void
 signal_handler (int signal)
 {
-  if (signal == SIGTERM)
-  {
-    gtk_main_quit ();
-  }
+  gtk_main_quit ();
 }
 
 static guint
@@ -129,18 +126,15 @@ main (int argc, char **argv)
   /* Initialize GnomeVFS */
   gnome_vfs_init ();
 
-  /* Add handler for TERM signal */
+  /* Add handler for TERM and signals */
   signal (SIGTERM, signal_handler);
+  signal (SIGINT, signal_handler);
+
+  if (getenv ("DEBUG_OUTPUT") == NULL)
+    console_quiet ();
 
   /* Setup Stamp File */
   hd_stamp_file_init (HD_STATUS_MENU_STAMP_FILE);
-
-  if (getenv ("DEBUG_OUTPUT") == NULL)
-    {
-      printf ("%s: console is quiet, define DEBUG_OUTPUT to prevent this.\n",
-              argv[0]);
-      console_quiet ();
-    }
 
   /* Create a plugin manager instance */
   plugin_manager = hd_plugin_manager_new (
