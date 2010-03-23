@@ -1,3 +1,10 @@
+2010-03-21  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	NB#161862 applications status menu should react to "mouse up" event
+
+	* src/hd-status-area.c:
+	  s/press/release/ig
+
 2010-03-03  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
 	Release 0.3.35
