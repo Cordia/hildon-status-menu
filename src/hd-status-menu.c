@@ -185,9 +185,6 @@ hd_status_menu_init (HDStatusMenu *status_menu)
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
-
-  hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
-                                        HILDON_PORTRAIT_MODE_SUPPORT);
 }
 
 static void

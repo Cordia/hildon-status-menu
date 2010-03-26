@@ -8,6 +8,8 @@
 
 	* src/hd-status-menu.c (update_portrait):
 	  Hide the status menu when going to portrait.
+	* src/hd-status-menu.c (hd_status_menu_init):
+	  Don't claim portrait support, so we won't be auto-rotated.
 
 2010-03-23  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
