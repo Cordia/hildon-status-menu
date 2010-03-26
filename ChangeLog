@@ -1,5 +1,9 @@
 2010-03-26  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
+	Release 0.3.37
+
+2010-03-26  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
 	Temporary useless measure for NB#157265.
 
 	* src/hd-status-menu.c (update_portrait):
