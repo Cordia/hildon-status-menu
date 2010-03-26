@@ -346,6 +346,11 @@ update_portrait (HDStatusMenu *status_menu)
   gint window_width;
 
   priv->portrait = is_portrait_mode (GTK_WIDGET (status_menu));
+  if (priv->portrait)
+    {
+      gtk_widget_hide (GTK_WIDGET (status_menu));
+      return;
+    }
 
   if (priv->portrait)
     window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;

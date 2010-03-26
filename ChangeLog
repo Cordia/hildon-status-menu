@@ -1,5 +1,12 @@
 2010-03-23  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
+	Temporary useless measure for NB#157265.
+
+	* src/hd-status-menu.c (update_portrait):
+	  Hide the status menu when going to portrait.
+
+2010-03-23  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
 	Release 0.3.36
 
 2010-03-23  Adam Endrodi <adam.endrodi@blumsoft.eu>
