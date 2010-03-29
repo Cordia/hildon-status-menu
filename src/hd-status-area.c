@@ -98,6 +98,10 @@ button_release_event_cb (GtkWidget      *widget,
   HDStatusAreaPrivate *priv = status_area->priv;
 
   gtk_widget_show (priv->status_menu);
+  if (!GTK_WIDGET_VISIBLE (priv->status_menu))
+    /* Failed to show the status menu because it got deleted.
+     * Make sure it doesn't retain the grab. */
+    gtk_grab_remove (GTK_WIDGET (priv->status_menu));
 
   return TRUE;
 }
