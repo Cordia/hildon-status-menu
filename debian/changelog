@@ -1,8 +1,14 @@
-hildon-status-menu (0.3.38~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.39~unreleased) unstable; urgency=low
 
   * :)
 
  -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 02 Mar 2010 11:13:23 +0200
+
+hildon-status-menu (0.3.38) unstable; urgency=low
+
+  * Fixes: NB#162533 - Unable to launch the status bar after continuously changing the phone oreintation in phone application
+
+ -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Mon, 29 Mar 2010 14:54:33 +0300
 
 hildon-status-menu (0.3.37) unstable; urgency=low
 
@@ -12,7 +18,7 @@ hildon-status-menu (0.3.37) unstable; urgency=low
 
 hildon-status-menu (0.3.36) unstable; urgency=low
 
-  * Fixes: NB#161862 applications status menu should react to "mouse up" event
+  * Fixes: NB#161862 - applications status menu should react to "mouse up" event
 
  -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 23 Mar 2010 16:12:05 +0200
 

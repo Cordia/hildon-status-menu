@@ -1,3 +1,16 @@
+2010-03-29  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	Release 0.3.38
+
+2010-03-29  Adam Endrodi <adam.endrodi@blumsoft.eu>
+
+	NB#162533 Unable to launch the status bar after continuously
+		  changing the phone oreintation in phone application
+
+	* src/hd-status-area.c (button_release_event_cb):
+	  Realize that gtk_widget_show() might have failed and screwed up
+	  the pointer grab.  Clean it up this case.
+
 2010-03-26  Adam Endrodi <adam.endrodi@blumsoft.eu>
 
 	Release 0.3.37
