@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.38) unstable; urgency=low
+
+  * Fixes: NB#162533 - Unable to launch the status bar after continuously changing the phone oreintation in phone application
+
+ -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Mon, 29 Mar 2010 14:54:33 +0300
+
 hildon-status-menu (0.3.37) unstable; urgency=low
 
   * Hide the status menu when going to portrait.
