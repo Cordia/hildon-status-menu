@@ -384,7 +384,7 @@ hd_status_area_plugin_added_cb (HDPluginManager *plugin_manager,
       if (permanent_item && strcmp (value, permanent_item) == 0)
         {
           image = priv->special_item_image [i];
-          g_object_set_qdata (plugin, quark_hd_status_area_image, image);
+          g_object_set_qdata_full (plugin, quark_hd_status_area_image, image, (GDestroyNotify) gtk_widget_destroy);
 
           g_free (value);
           break;
