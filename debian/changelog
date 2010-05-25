@@ -1,8 +1,8 @@
-hildon-status-menu (0.3.39~unreleased) unstable; urgency=low
+hildon-status-menu (0.3.39) unstable; urgency=low
 
-  * :)
+  * Fixes: NB#162675 - desktop recompilation with G_DISABLE_CAST_CHECKS
 
- -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 02 Mar 2010 11:13:23 +0200
+ -- Adam Endrodi <adam.endrodi@blumsoft.eu>  Tue, 25 May 2010 13:18:16 +0300
 
 hildon-status-menu (0.3.38) unstable; urgency=low
 
