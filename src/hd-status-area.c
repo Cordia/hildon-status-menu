@@ -637,7 +637,6 @@ hd_status_area_realize (GtkWidget *widget)
   cairo_destroy (cr);
 
   gdk_window_set_back_pixmap (widget->window, pixmap, FALSE);
-  g_object_unref(pixmap);
 }
 
 static void

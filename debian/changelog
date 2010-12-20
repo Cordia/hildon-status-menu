@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.40-2) unstable; urgency=low
+
+  * Added portrait mode support
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Mon, 20 Dec 2010 03:07:22 +0200
+
 hildon-status-menu (0.3.40~unreleased) unstable; urgency=low
 
   * :)

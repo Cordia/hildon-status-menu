@@ -104,7 +104,7 @@ notify_visible_items_cb (HDStatusMenu *status_menu)
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
-                                   MIN (MAX ((visible_items + 1) / 2, 1), 5) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX ((visible_items + 1) / 2, 1), 6) * STATUS_MENU_ITEM_HEIGHT);
     }
 }
 
@@ -185,6 +185,8 @@ hd_status_menu_init (HDStatusMenu *status_menu)
                     G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
   gtk_window_set_modal (GTK_WINDOW (status_menu), TRUE);
+  hildon_gtk_window_set_portrait_flags (GTK_WINDOW (status_menu),
+					HILDON_PORTRAIT_MODE_SUPPORT);
 }
 
 static void
@@ -343,11 +345,11 @@ update_portrait (HDStatusMenu *status_menu)
   gint window_width;
 
   priv->portrait = is_portrait_mode (GTK_WIDGET (status_menu));
-  if (priv->portrait)
+  /*if (priv->portrait)
     {
-      gtk_widget_hide (GTK_WIDGET (status_menu));
+      gtk_widget_show (GTK_WIDGET (status_menu));
       return;
-    }
+    }*/
 
   if (priv->portrait)
     window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;
