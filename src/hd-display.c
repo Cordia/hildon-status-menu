@@ -26,8 +26,10 @@
 
 #include <dbus/dbus.h>
 
+#ifdef HAVE_DSME
 #include <mce/dbus-names.h>
 #include <mce/mode-names.h>
+#endif
 
 #include <string.h>
 
@@ -125,9 +127,11 @@ initialize_system_dbus (HDDisplay *display)
      return;
    }
 
+#ifdef HAVE_DSME
   dbus_bus_add_match (priv->system_bus,
                       "type='signal', interface='" MCE_SIGNAL_IF "'",
                       NULL);
+#endif
   dbus_connection_add_filter (priv->system_bus,
                               system_bus_signal_filter,
                               display,
@@ -139,6 +143,7 @@ system_bus_signal_filter (DBusConnection *system_bus,
                           DBusMessage    *msg,
                           void           *data)
 {
+#ifdef HAVE_DSME
   HDDisplay *display = data;
   HDDisplayPrivate *priv = display->priv;
 
@@ -175,6 +180,7 @@ system_bus_signal_filter (DBusConnection *system_bus,
                            0);
           }
      }
+#endif
 
   return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
@@ -187,9 +193,11 @@ hd_display_dispose (GObject *object)
 
   if (priv->system_bus)
     {
+#ifdef HAVE_DSME
       dbus_bus_remove_match (priv->system_bus,
                              "type='signal', interface='" MCE_SIGNAL_IF "'",
                              NULL);
+#endif
       dbus_connection_remove_filter (priv->system_bus,
                                      system_bus_signal_filter,
                                      display);
