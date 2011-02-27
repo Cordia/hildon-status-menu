@@ -113,6 +113,9 @@ is_widget_on_screen (GtkWidget *widget)
   gint x, y, width, height;
 
   window = gtk_widget_get_window (widget);
+  if (!window)
+    return FALSE;
+
   gdk_window_get_root_origin (window, &x, &y);
   gdk_window_get_geometry (window, NULL, NULL, &width, &height, NULL);
 
