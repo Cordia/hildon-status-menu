@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/apps/osso/hildon-status-menu/view/number_of_rows</key>
+      <applyto>/apps/osso/hildon-status-menu/view/number_of_rows</applyto>
+      <owner>hildon-status-menu</owner>
+      <type>int</type>
+      <default>6</default>
+      <locale name="C">
+        <short>Set the number of rows to use in the status menu</short>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/apps/osso/hildon-status-menu/view/number_of_rows_portrait</key>
+      <applyto>/apps/osso/hildon-status-menu/view/number_of_rows_portrait</applyto>
+      <owner>hildon-status-menu</owner>
+      <type>int</type>
+      <default>8</default>
+      <locale name="C">
+        <short>Set the number of rows to use in the status menu in portrait mode</short>
+      </locale>
+    </schema>
+ 
+  </schemalist>
+</gconfschemafile>

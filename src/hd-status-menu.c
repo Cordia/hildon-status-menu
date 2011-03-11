@@ -36,6 +36,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <gconf/gconf-client.h>
+
 #include "hd-status-menu.h"
 #include "hd-status-menu-box.h"
 #include "hd-status-menu-config.h"
@@ -62,6 +64,12 @@
 #define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
 #define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
 
+#define NUMBER_OF_ROWS_GCONF_KEY "/apps/osso/hildon-status-menu/view/number_of_rows"
+#define NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY "/apps/osso/hildon-status-menu/view/number_of_rows_portrait"
+
+#define NUMBER_OF_ROWS gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY, NULL)
+#define NUMBER_OF_ROWS_PORTRAIT gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY, NULL)
+
 enum
 {
   PROP_0,
@@ -74,6 +82,8 @@ struct _HDStatusMenuPrivate
   GtkWidget       *pannable;
 
   HDPluginManager *plugin_manager;
+
+  GConfClient     *gconf_client;
 
   gboolean         pressed_outside;
 
@@ -98,13 +108,13 @@ notify_visible_items_cb (HDStatusMenu *status_menu)
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_PORTRAIT,
-                                   MIN (MAX (visible_items, 1), 8) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX (visible_items, 1), NUMBER_OF_ROWS_PORTRAIT) * STATUS_MENU_ITEM_HEIGHT);
     }
   else
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
-                                   MIN (MAX ((visible_items + 1) / 2, 1), 6) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX ((visible_items + 1) / 2, 1), NUMBER_OF_ROWS) * STATUS_MENU_ITEM_HEIGHT);
     }
 }
 
@@ -153,6 +163,9 @@ hd_status_menu_init (HDStatusMenu *status_menu)
                                   NULL, NULL);
     }
 
+  /* Initialize GConfClient */
+  priv->gconf_client = gconf_client_get_default ();
+
   /* Create widgets */
   priv->box = hd_status_menu_box_new ();
   g_signal_connect_swapped (G_OBJECT (priv->box), "notify::visible-items",
@@ -198,6 +211,12 @@ hd_status_menu_dispose (GObject *object)
     {
       g_object_unref (priv->plugin_manager);
       priv->plugin_manager = NULL;
+    }
+
+  if (priv->gconf_client)
+    {
+      g_object_unref (priv->gconf_client);
+      priv->gconf_client = NULL;
     }
 
   G_OBJECT_CLASS (hd_status_menu_parent_class)->dispose (object);
