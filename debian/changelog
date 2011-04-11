@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.40-5) unstable; urgency=low
+
+  * Added new gconf key to set the number of rows.
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Wed, 30 Mar 2011 00:17:05 +0200
+
 hildon-status-menu (0.3.40-4) unstable; urgency=low
 
   * Don't keep the background pixmap around.
