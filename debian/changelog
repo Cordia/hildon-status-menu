@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.40-6) unstable; urgency=low
+
+  * Added a check, if the number of rows is 0 use a hardcoded default.
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Tue, 12 Apr 2011 14:06:27 +0300
+
 hildon-status-menu (0.3.40-5) unstable; urgency=low
 
   * Added new gconf key to set the number of rows.

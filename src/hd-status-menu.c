@@ -99,6 +99,28 @@ notify_visible_items_cb (HDStatusMenu *status_menu)
 {
   HDStatusMenuPrivate *priv = status_menu->priv;
   guint visible_items;
+  int rows = NUMBER_OF_ROWS;
+  int rows_portrait = NUMBER_OF_ROWS_PORTRAIT;
+
+  /* If gconf default to 0 or the user sets the value to a negative integer
+     use a hardcoded value, then save that in gconf) */
+  if (rows <= 0)
+    {
+      GConfValue *value = gconf_value_new (GCONF_VALUE_INT);
+      rows = 6;
+      gconf_value_set_int (value, rows);
+      gconf_client_set (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY, value, NULL);
+      gconf_value_free (value);
+    }
+
+  if (rows_portrait <= 0)
+    {
+      GConfValue *value = gconf_value_new (GCONF_VALUE_INT);
+      rows_portrait = 8;
+      gconf_value_set_int (value, rows_portrait);
+      gconf_client_set (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY, value, NULL);
+      gconf_value_free (value);
+    }
 
   g_object_get (priv->box,
                 "visible-items", &visible_items,
@@ -108,13 +130,13 @@ notify_visible_items_cb (HDStatusMenu *status_menu)
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_PORTRAIT,
-                                   MIN (MAX (visible_items, 1), NUMBER_OF_ROWS_PORTRAIT) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX (visible_items, 1), rows_portrait) * STATUS_MENU_ITEM_HEIGHT);
     }
   else
     {
       gtk_widget_set_size_request (priv->pannable,
                                    STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
-                                   MIN (MAX ((visible_items + 1) / 2, 1), NUMBER_OF_ROWS) * STATUS_MENU_ITEM_HEIGHT);
+                                   MIN (MAX ((visible_items + 1) / 2, 1), rows) * STATUS_MENU_ITEM_HEIGHT);
     }
 }
 
