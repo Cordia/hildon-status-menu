@@ -64,8 +64,9 @@
 #define DSME_SIGNAL_INTERFACE "com.nokia.dsme.signal"
 #define DSME_SHUTDOWN_SIGNAL_NAME "shutdown_ind"
 
-#define NUMBER_OF_ROWS_GCONF_KEY "/apps/osso/hildon-status-menu/view/number_of_rows"
-#define NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY "/apps/osso/hildon-status-menu/view/number_of_rows_portrait"
+#define NUMBER_OF_ROWS_GCONF_DIR "/apps/osso/hildon-status-menu/view"
+#define NUMBER_OF_ROWS_GCONF_KEY NUMBER_OF_ROWS_GCONF_DIR "/number_of_rows"
+#define NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY NUMBER_OF_ROWS_GCONF_DIR "number_of_rows_portrait"
 
 #define NUMBER_OF_ROWS gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY, NULL)
 #define NUMBER_OF_ROWS_PORTRAIT gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY, NULL)
@@ -157,6 +158,55 @@ hd_status_menu_dbus_handler (DBusConnection *conn,
 }
 
 static void
+hd_status_menu_on_gconf_value_changed (GConfClient *client G_GNUC_UNUSED,
+                                       guint cnxn_id  G_GNUC_UNUSED,
+                                       GConfEntry *entry  G_GNUC_UNUSED,
+                                       HDStatusMenu *status_menu)
+{
+  HDStatusMenuPrivate *priv = HD_STATUS_MENU_GET_PRIVATE (status_menu);
+  guint visible_items;
+  int rows = NUMBER_OF_ROWS;
+  int rows_portrait = NUMBER_OF_ROWS_PORTRAIT;
+
+  /* If gconf default to 0 or the user sets the value to a negative integer
+     use a hardcoded value, then save that in gconf) */
+  if (rows <= 0)
+    {
+      GConfValue *value = gconf_value_new (GCONF_VALUE_INT);
+      rows = 6;
+      gconf_value_set_int (value, rows);
+      gconf_client_set (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY, value, NULL);
+      gconf_value_free (value);
+    }
+
+  if (rows_portrait <= 0)
+    {
+      GConfValue *value = gconf_value_new (GCONF_VALUE_INT);
+      rows_portrait = 8;
+      gconf_value_set_int (value, rows_portrait);
+      gconf_client_set (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY, value, NULL);
+      gconf_value_free (value);
+    }
+
+  g_object_get (priv->box,
+                "visible-items", &visible_items,
+                NULL);
+
+  if (priv->portrait)
+    {
+      gtk_widget_set_size_request (priv->pannable,
+                                   STATUS_MENU_PANNABLE_WIDTH_PORTRAIT,
+                                   MIN (MAX (visible_items, 1), rows_portrait) * STATUS_MENU_ITEM_HEIGHT);
+    }
+  else
+    {
+      gtk_widget_set_size_request (priv->pannable,
+                                   STATUS_MENU_PANNABLE_WIDTH_LANDSCAPE,
+                                   MIN (MAX ((visible_items + 1) / 2, 1), rows) * STATUS_MENU_ITEM_HEIGHT);
+    }
+}
+
+static void
 hd_status_menu_init (HDStatusMenu *status_menu)
 {
   DBusConnection *sysbus;
@@ -187,6 +237,16 @@ hd_status_menu_init (HDStatusMenu *status_menu)
 
   /* Initialize GConfClient */
   priv->gconf_client = gconf_client_get_default ();
+
+  /* Listen to gconf value changes */
+  gconf_client_add_dir (priv->gconf_client, NUMBER_OF_ROWS_GCONF_DIR,
+                        GCONF_CLIENT_PRELOAD_NONE, NULL);
+  gconf_client_notify_add (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY,
+                           (gpointer) hd_status_menu_on_gconf_value_changed,
+                           status_menu, NULL, NULL);
+  gconf_client_notify_add (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY,
+                           (gpointer) hd_status_menu_on_gconf_value_changed,
+                           status_menu, NULL, NULL);
 
   /* Create widgets */
   priv->box = hd_status_menu_box_new ();
@@ -386,11 +446,6 @@ update_portrait (HDStatusMenu *status_menu)
   gint window_width;
 
   priv->portrait = is_portrait_mode (GTK_WIDGET (status_menu));
-  /*if (priv->portrait)
-    {
-      gtk_widget_show (GTK_WIDGET (status_menu));
-      return;
-    }*/
 
   if (priv->portrait)
     window_width = STATUS_MENU_PANNABLE_WIDTH_PORTRAIT;
