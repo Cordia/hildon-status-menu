@@ -66,7 +66,7 @@
 
 #define NUMBER_OF_ROWS_GCONF_DIR "/apps/osso/hildon-status-menu/view"
 #define NUMBER_OF_ROWS_GCONF_KEY NUMBER_OF_ROWS_GCONF_DIR "/number_of_rows"
-#define NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY NUMBER_OF_ROWS_GCONF_DIR "number_of_rows_portrait"
+#define NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY NUMBER_OF_ROWS_GCONF_DIR "/number_of_rows_portrait"
 
 #define NUMBER_OF_ROWS gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_GCONF_KEY, NULL)
 #define NUMBER_OF_ROWS_PORTRAIT gconf_client_get_int (priv->gconf_client, NUMBER_OF_ROWS_PORTRAIT_GCONF_KEY, NULL)

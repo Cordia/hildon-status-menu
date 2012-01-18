@@ -1,3 +1,9 @@
+hildon-status-menu (0.3.40-8) unstable; urgency=low
+
+  * Fixed a missing / that caused loading changes to fail.
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Wed, 18 Jan 2012 21:52:45 +0200
+
 hildon-status-menu (0.3.40-7) unstable; urgency=low
 
   * Display 6 icons in the status menu in portrait mode.
