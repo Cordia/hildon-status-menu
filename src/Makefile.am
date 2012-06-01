@@ -29,5 +29,6 @@ hildon_status_menu_SOURCES = \
 hildon_status_menu_LDFLAGS = \
 	$(HILDON_LIBS)	    							\
 	$(LIBHILDONDESKTOP_LIBS)						\
+	$(X11_LIBS)								\
 	$(GNOME_VFS_LIBS)							\
 	$(MAEMO_LAUNCHER_LIBS)
